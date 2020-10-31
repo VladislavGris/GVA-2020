@@ -1,0 +1,19 @@
+#pragma once
+#include "LT.h"
+#include "IT.h"
+#include "Log.h"
+#include "In.h"
+#include "FST.h"
+#include <iostream>
+#include <cstring>
+#define BUF_SIZE 100
+#define END_OF_INSTRUCTION	'\n'
+#define FST_ARRAY_SIZE		19
+#define OPERATOR_ASIGNMENT	"<-"
+namespace Lex
+{
+	void ParseAChain(In::IN in, LT::LexTable& lextable, IT::IdTable& idtable);
+	bool IsSeparator(char symbol);		// Символ является разделителем
+	bool IsLexSeparator(char symbol);	// Символ является разделителем, который должен быть выведен в табилцу лексем
+	bool IsLiteralSeparator(char symbol);
+}

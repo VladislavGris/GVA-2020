@@ -1,0 +1,51 @@
+v1
+number function Comparsion(number a, number b)
+begin
+if[a > b] then
+return a
+else
+return b
+end
+
+number function Equality(number a, number b)
+begin
+if[a = b] then
+return 10x1
+else
+return 10x0
+end
+
+main
+begin
+number a <- 2x101 
+number b
+symbol c <- 'c'
+symbol d
+symbol[6] hello <- "ѕривет"
+symbol[6] Hello <- "выходные данные"
+b <- 8x11
+d <- 'd'
+if[a GE b] then
+begin
+number e <- a
+a <- b
+b <- e
+end
+else
+begin
+number e <- b
+b <- a
+a <- e
+end
+
+
+
+if[a = 10x5] then
+print("a = 5")
+else if[a = 10x4] then
+print("a = 4")
+else
+print("a не 5 и не 4")
+if[a # 10x3] then
+print("a не равно 3")
+end

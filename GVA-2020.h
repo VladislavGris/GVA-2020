@@ -1,0 +1,10 @@
+#pragma once
+#include <iostream>
+#include "Error.h"
+#include "In.h"
+#include "Log.h"
+#include "Parm.h"
+#include "FST.h"
+#include "LT.h"
+#include "IT.h"
+#include "Lex.h"
