@@ -16,6 +16,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		Log::WriteIn(log, in);
 		Lex::ParseAChain(in, lextable, idtable);
 		LT::PrintLexTable(lextable);
+		IT::PrintIDTable(idtable);
 		Log::WriteLine(log, "Тест: без ошибок", "");
 		Log::Close(log);
 	}

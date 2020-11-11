@@ -9,7 +9,7 @@ namespace LT
 		newTable.table = new Entry[newTable.maxsize];
 		return newTable;
 	}
-	Entry FillEntry(char* lexema, int strNum, int id, const char* operatorSymbol)
+	Entry FillEntry(char* lexema, int strNum, int id, char* operatorSymbol)
 	{
 		Entry entry;
 		entry.idxTI = id;
@@ -42,10 +42,22 @@ namespace LT
 	}
 	void PrintLexTable(LexTable& lextable)
 	{
-		std::cout << "Таблица лексем" << std::endl;
+		std::cout << "--- Таблица лексем ---" << std::endl;
+		std::cout << std::setw(3) << '№'<<std::setw(3)<< '|';
+		std::cout << std::setw(7) << "strNum|";
+		std::cout << std::setw(4) << "lex|";
+		std::cout << std::setw(6) << "idxTI|";
+		std::cout << std::setw(3) << "op|" << std::endl;
 		for (int i = 0; i < lextable.size; i++)
 		{
-			std::cout<< lextable.table[i].sn << " " << lextable.table[i].idxTI << " " << lextable.table[i].lexema << " " << lextable.table[i].operptorSymbol << std::endl;
+			std::cout << std::setw(5) << i << '|';
+			std::cout << std::setw(6) << lextable.table[i].sn << '|';
+			std::cout << std::setw(3) << lextable.table[i].lexema << '|';
+			if(lextable.table[i].idxTI == LT_TI_NULLIDX)
+				std::cout << std::setw(6) << '|';
+			else
+				std::cout << std::setw(5) << lextable.table[i].idxTI << '|';
+			std::cout << std::setw(3) << lextable.table[i].operptorSymbol << '|' << std::endl;
 		}
 	}
 }

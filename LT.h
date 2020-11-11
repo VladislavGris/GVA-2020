@@ -22,7 +22,7 @@ namespace LT
 		Entry* table;
 	};
 	LexTable Create(int size);
-	Entry FillEntry(char* lexema, int strNum, int id, const char* operatorSymbol = "-1");
+	Entry FillEntry(char* lexema, int strNum, int id, char* operatorSymbol);
 	void Add(LexTable& lextable, Entry entry);
 	Entry GetEntry(LexTable& lextable, int n);
 	void PrintLexTable(LexTable& lextable);

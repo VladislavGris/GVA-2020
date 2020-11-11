@@ -9,7 +9,11 @@
 #define BUF_SIZE 100
 #define END_OF_INSTRUCTION	'\n'
 #define FST_ARRAY_SIZE		19
-#define OPERATOR_ASIGNMENT	"<-"
+#define START_OF_LITERAL	'l'
+#define START_OF_SUBAREA	'{'
+#define END_OF_SUBAREA		'}'
+#define START_OF_PARAMETRS	'('
+#define END_OF_PARAMETERS	')'
 namespace Lex
 {
 	void ParseAChain(In::IN in, LT::LexTable& lextable, IT::IdTable& idtable);
