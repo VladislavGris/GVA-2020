@@ -3,7 +3,7 @@ namespace Lex
 {
 	void ParseAChain(In::IN in, LT::LexTable& lextable, IT::IdTable& idtable)
 	{
-		int lexemeSize = 0, strCount = 1, idxTI = LT_TI_NULLIDX, areaOfVisibility = 1, baseArea,subAreaOfVisibility = -1, literalCount = 1;
+		int lexemeSize = 0, strCount = 1, idxTI = LT_TI_NULLIDX, areaOfVisibility = 0, baseArea=0,subAreaOfVisibility = -1, literalCount = 1;
 		char* lexeme = new char[BUF_SIZE], symbol, token[LEXEMA_FIXSIZE], operation[OPERATOR_FIXSIZE], empty[2] = "", id[ID_MAXSIZE], lexNumBuf[ID_MAXSIZE - 1], lastToken[LEXEMA_FIXSIZE];
 		const char* lexArray[FST_ARRAY_SIZE] = {LEX_NUMBER, LEX_FUNCTION, LEX_SYMBOL, LEX_BEGIN, LEX_IF, LEX_THEN, LEX_RETURN, 
 												LEX_ELSE, LEX_END, LEX_MAIN, LEX_PRINT, LEX_ASIGNMENT, LEX_GE,
@@ -249,6 +249,8 @@ namespace Lex
 						areParametrs = true;
 					if (areParametrs && symbol == END_OF_PARAMETERS)
 						areParametrs = false;
+					if (symbol == START_OF_PARAMETRS)
+						type = IT::F;
 					for (int i = 0; i < FST_ARRAY_SIZE; i++)
 						if (FST::execute(fstArray[i]))
 						{
@@ -273,12 +275,14 @@ namespace Lex
 								break;
 							case 17: case 18:			// 10x... || 8x... || 2x...
 								type = IT::L;
+								datatype = IT::NUM;
 								break;
 							}
 							strcpy_s(token, lexArray[i]);
 							wasChanged = true;
 							break;
 						}
+					
 				}
 				// Если wasChanged так и остался в false, то лексема не определена
 				if (!wasChanged)
@@ -308,8 +312,8 @@ namespace Lex
 								id[i + 1] = lexNumBuf[i];
 						}
 						idxTI = IT::IsId(idtable, id, areaOfVisibility);
-						if (inSubArea && idxTI == TI_NULLIDX)
-							idxTI = IT::IsId(idtable, id, baseArea);
+						if (type == IT::F && idxTI == TI_NULLIDX)
+							idxTI = IT::IsId(idtable, id, FUNCTION_AREA);
 						if (idxTI == TI_NULLIDX)
 						{
 							ITTempEntry = IT::FillEntry(lextable.size, id, datatype, type, areaOfVisibility);
@@ -321,37 +325,17 @@ namespace Lex
 					else
 						tempEntry = LT::FillEntry(token, strCount, LT_TI_NULLIDX, operation);
 					LT::Add(lextable, tempEntry);
-					//// Если встреччается символ {
-					//if (!strcmp(lexeme, START_OF_SUBAREA))
-					//{
-					//	baseArea = areaOfVisibility;
-					//	areaOfVisibility++;
-					//	inSubArea = true;
-					//}
-					//// Если встречается символ }
-					//if (!strcmp(lexeme, END_OF_SUBAREA))
-					//{
-					//	areaOfVisibility = baseArea;
-					//	inSubArea = false;
-					//}
-					//if (!strcmp(token, LEX_END))
-					//	areaOfVisibility++;
 				}
-				// Если встреччается символ {
-				if (symbol == START_OF_SUBAREA)
+				// Входим в область видимости по символу ( и по main
+				if ((symbol == START_OF_PARAMETRS && areaOfVisibility == 0) || !strcmp(token, LEX_MAIN))
 				{
-					baseArea = areaOfVisibility;
-					areaOfVisibility = subAreaOfVisibility--;
-					inSubArea = true;
+					areaOfVisibility = ++baseArea;
 				}
-				// Если встречается символ }
-				if (symbol == END_OF_SUBAREA)
-				{
-					areaOfVisibility = baseArea;
-					inSubArea = false;
-				}
+				// Выходим из области видимости по end
 				if (!strcmp(token, LEX_END))
-					areaOfVisibility+=2;
+				{
+					areaOfVisibility = 0;
+				}
 				memset(lexeme, 0, BUF_SIZE);
 				// Определение сепараторов, которые должны выводиться в таблицу лексем
 				if (IsLexSeparator(symbol))

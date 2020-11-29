@@ -1,4 +1,3 @@
-v1
 number function Comparsion(number a, number b)
 begin
 if[a > b] then
@@ -26,14 +25,14 @@ end
 main
 begin
 number a <- 2x101 
-number b
+number b <- 10x13
 symbol c <- 'c'
 symbol d
 symbol[6] hello <- "Привет"
 symbol[6] Hello <- "выходные данные"
 b <- 8x11
 d <- 'd'
-
+number g <- Comparsion(a, b)
 
 if[a GE b] then
 {

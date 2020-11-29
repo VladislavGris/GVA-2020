@@ -14,6 +14,7 @@
 #define END_OF_SUBAREA		'}'
 #define START_OF_PARAMETRS	'('
 #define END_OF_PARAMETERS	')'
+#define FUNCTION_AREA		0
 namespace Lex
 {
 	void ParseAChain(In::IN in, LT::LexTable& lextable, IT::IdTable& idtable);
