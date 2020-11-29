@@ -13,6 +13,8 @@ namespace IT
 	}
 	void Add(IdTable& idtable, Entry entry)
 	{
+		if (idtable.size == TI_MAXSIZE)
+			throw ERROR_THROW(201);
 		idtable.table[idtable.size] = entry;
 		idtable.size++;
 	}

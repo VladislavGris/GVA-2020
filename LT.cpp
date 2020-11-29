@@ -20,6 +20,8 @@ namespace LT
 	}
 	void Add(LexTable& lextable, Entry entry)
 	{
+		if (lextable.size == LT_MAXSIZE)
+			throw ERROR_THROW(200);			// Переполнение таблицы лексем
 		lextable.table[lextable.size] = entry;
 		lextable.size++;
 	}

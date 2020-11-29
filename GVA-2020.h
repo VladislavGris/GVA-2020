@@ -8,3 +8,4 @@
 #include "LT.h"
 #include "IT.h"
 #include "Lex.h"
+//#define PRINT_TABLES

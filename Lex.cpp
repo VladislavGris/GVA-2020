@@ -1,23 +1,25 @@
 #include "Lex.h"
 namespace Lex
 {
-	void ParseAChain(In::IN in, LT::LexTable& lextable, IT::IdTable& idtable)
+	bool ParseAChain(In::IN in, LT::LexTable& lextable, IT::IdTable& idtable, Log::LOG log)
 	{
-		int lexemeSize = 0, strCount = 1, idxTI = LT_TI_NULLIDX, areaOfVisibility = 0, baseArea=0, literalCount = 1;
+		int lexemeSize = 0, strCount = 1,position = 0,  idxTI = LT_TI_NULLIDX, areaOfVisibility = 0, baseArea=0, literalCount = 1;
 		char* lexeme = new char[BUF_SIZE], symbol, operation[OPERATOR_FIXSIZE], empty[2] = "", id[ID_MAXSIZE], lexNumBuf[ID_MAXSIZE - 1];
 		char token, lastToken = '0';
 		const char lexArray[FST_ARRAY_SIZE] = {LEX_NUMBER, LEX_FUNCTION, LEX_SYMBOL, LEX_BEGIN, LEX_IF, LEX_THEN, LEX_RETURN, 
 												LEX_ELSE, LEX_END, LEX_MAIN, LEX_PRINT, LEX_ASIGNMENT, LEX_GE,
 												LEX_GREATER, LEX_EQUAL, LEX_NOT_EQUAL, LEX_ID, LEX_LITERAL, LEX_LITERAL,LEX_LITERAL };
-		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false;
+		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false, wasError = false; 
 		IT::IDDATATYPE datatype;
 		IT::IDTYPE type;
 		LT::Entry tempEntry;
 		IT::Entry ITTempEntry;
+		Error::ERROR e;
 		memset(lexeme, 0, BUF_SIZE);
 		for (int i = 0; i <= in.size; i++)
 		{
 			symbol = in.text[i];
+			position++;
 			if ((IsSeparator(symbol) && !isLiteral) || i == in.size)
 			{
 				FST::FST fstArray[FST_ARRAY_SIZE] =
@@ -285,7 +287,7 @@ namespace Lex
 								else
 									type = IT::V;
 								break;
-							case 17: case 18: case 19:			// 10x... || 8x... || 2x...
+							case 17: case 18: case 19:			// 10x... || 8x... || 2x... || ...
 								type = IT::L;
 								datatype = IT::NUM;
 								break;
@@ -296,14 +298,18 @@ namespace Lex
 						}
 					
 				}
-				// Если wasChanged так и остался в false, то лексема не определена
-				// СГЕНЕРИРОВАТЬ ОШИБКУ
-				if (!wasChanged)
-					token = LEX_UNDEF;
-				lastToken = token;
 				// Не выводим лексему, если предыдущий символ был сепаратором(два последовательно идущих сепаратора)
 				if (!wasSeparator)
 				{
+					// Если wasChanged так и остался в false, то лексема не определена
+					if (!wasChanged)
+					{
+						token = LEX_UNDEF;
+						e = ERROR_THROW_IN(202, strCount, position);
+						Log::WriteError(log, e);
+						wasError = true;
+					}
+					lastToken = token;
 					if (token == LEX_EQUAL)		// Заполнение поля operptorSymbol если токен распознан как операция
 						strcpy_s(operation, lexeme);
 					else
@@ -325,9 +331,12 @@ namespace Lex
 								id[i + 1] = lexNumBuf[i];
 						}
 						idxTI = IT::IsId(idtable, id, areaOfVisibility);
-						// СГЕНЕРИРОВАТЬ ИСКЛЮЧЕНИЕ ЕСЛИ ФУНКЦИИ НЕ ОБЪЯВЛЕНО В ОБЛАСТИ
 						if (type == IT::F && idxTI == TI_NULLIDX)
+						{
 							idxTI = IT::IsId(idtable, id, FUNCTION_AREA);
+							if (areaOfVisibility != FUNCTION_AREA && idxTI == TI_NULLIDX)
+								throw ERROR_THROW_IN(203, strCount, position);	// Функция не объявлена
+						}
 						if (idxTI == TI_NULLIDX)
 						{
 							ITTempEntry = IT::FillEntry(lextable.size, id, datatype, type, areaOfVisibility);
@@ -338,7 +347,8 @@ namespace Lex
 					}
 					else
 						tempEntry = LT::FillEntry(token, strCount, LT_TI_NULLIDX, operation);
-					LT::Add(lextable, tempEntry);
+					if(token != LEX_UNDEF)
+						LT::Add(lextable, tempEntry);
 				}
 				// Входим в область видимости по символу ( и по main
 				if ((symbol == START_OF_PARAMETRS && areaOfVisibility == 0) || token == LEX_MAIN)
@@ -348,7 +358,7 @@ namespace Lex
 				// Выходим из области видимости по end
 				if (token == LEX_END)
 				{
-					areaOfVisibility = 0;
+					areaOfVisibility = FUNCTION_AREA;
 				}
 				// Определение сепараторов, которые должны выводиться в таблицу лексем
 				if (IsLexSeparator(symbol))
@@ -362,7 +372,10 @@ namespace Lex
 					isLiteral = true;
 				// Подсчет строк
 				if (symbol == END_OF_INSTRUCTION)
+				{
 					strCount++;
+					position = 0;
+				}
 				memset(lexeme, 0, BUF_SIZE);
 				lexemeSize = 0;
 				wasChanged = false;
@@ -383,6 +396,7 @@ namespace Lex
 			lexeme[lexemeSize] = symbol;
 			lexemeSize++;
 		}
+		return wasError;
 	}
 
 	bool IsSeparator(char symbol)

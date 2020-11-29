@@ -16,7 +16,9 @@ namespace Log
 	};
 
 	static const LOG INITLOG = { L"", NULL };		
-	LOG getlog(wchar_t logfile[]);					
+	LOG getlog(wchar_t logfile[]);
+	void WriteInfo(LOG log, char* c);
+	void WriteInfo(LOG log, const char* c);
 	void WriteLine(LOG log, const char* c, ...);			
 	void WriteLine(LOG log, const wchar_t* c, ...);
 	void WriteLog(LOG log);							

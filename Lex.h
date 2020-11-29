@@ -17,7 +17,7 @@
 #define FUNCTION_AREA		0
 namespace Lex
 {
-	void ParseAChain(In::IN in, LT::LexTable& lextable, IT::IdTable& idtable);
+	bool ParseAChain(In::IN in, LT::LexTable& lextable, IT::IdTable& idtable, Log::LOG log);
 	bool IsSeparator(char symbol);		// Символ является разделителем
 	bool IsLexSeparator(char symbol);	// Символ является разделителем, который должен быть выведен в табилцу лексем
 	bool IsLiteralSeparator(char symbol);

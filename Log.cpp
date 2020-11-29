@@ -13,6 +13,16 @@ namespace Log
 		wcscpy_s(log.logfile, logfile);
 		return log;
 	}
+	void WriteInfo(LOG log, char* c)
+	{
+		*(log.stream) << c << '\n';
+		log.stream->flush();
+	}
+	void WriteInfo(LOG log, const char* c)
+	{
+		*(log.stream) << c << '\n';
+		log.stream->flush();
+	}
 	void WriteLine(LOG log, const char* c, ...)
 	{
 		va_list args;
@@ -72,7 +82,7 @@ namespace Log
 	{
 		if (log.stream->is_open())
 			*(log.stream) << "Ошибка " << error.id << " : " << error.message << ", строка " << error.inext.line << ", позиция " << error.inext.col << std::endl;
-		else
+		/*else*/
 			std::cout << "Ошибка " << error.id << " : " << error.message << ", строка " << error.inext.line << ", позиция " << error.inext.col << std::endl;
 	}
 	void Close(LOG log)

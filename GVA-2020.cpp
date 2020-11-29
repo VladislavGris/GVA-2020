@@ -3,8 +3,8 @@
 int _tmain(int argc, _TCHAR* argv[])
 {
 	setlocale(LC_CTYPE, "rus");
-	LT::LexTable lextable = LT::Create(2000);
-	IT::IdTable idtable = IT::Create(1000);
+	LT::LexTable lextable = LT::Create(LT_MAXSIZE);
+	IT::IdTable idtable = IT::Create(TI_MAXSIZE);
 	Log::LOG log = Log::INITLOG;
 	try
 	{
@@ -14,16 +14,21 @@ int _tmain(int argc, _TCHAR* argv[])
 		Log::WriteParm(log, parm);
 		In::IN in = In::getin(parm.in);
 		Log::WriteIn(log, in);
-		Lex::ParseAChain(in, lextable, idtable);
+		Log::WriteInfo(log, "----Лексический анализ----");
+		if (!Lex::ParseAChain(in, lextable, idtable, log))
+			Log::WriteInfo(log, "Лексический анализ выполнен успешно");
+#ifdef PRINT_TABLES
 		LT::PrintLexTable(lextable);
 		IT::PrintIDTable(idtable);
-		Log::WriteLine(log, "Тест: без ошибок", "");
+#endif
+		//Log::WriteInfo(log, "Тест: без ошибок");
 		Log::Close(log);
 	}
 	catch (Error::ERROR e)
 	{
-		Log::WriteLine(log, "Тест: с ошибками", "");
 		Log::WriteError(log, e);
+		if(e.id >= 200 && e.id < 300)
+			Log::WriteInfo(log, "Работа лексического анализатора прервана");
 	}
 	system("pause");
 	return 0;
