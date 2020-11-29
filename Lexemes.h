@@ -1,30 +1,30 @@
-#define LEXEMA_FIXSIZE 3			// фиксированный размер лексемы
+#define LEXEMA_FIXSIZE 1			// фиксированный размер лексемы
 #define OPERATOR_FIXSIZE 3
 #define LT_MAXSIZE 4096				// максимальное количество строк в таблице лексем
 #define LT_TI_NULLIDX 0xffffffff	// нет элемента в таблице идентификаторов
-#define LEX_NUMBER	"ty"
-#define LEX_SYMBOL	"ty"
-#define LEX_FUNCTION "fx"
-#define LEX_ID		"id"
-#define LEX_BEGIN	"bg"
-#define LEX_IF      "if"
-#define LEX_THEN	"th"
-#define LEX_RETURN	"rt"
-#define LEX_ELSE    "el"
-#define LEX_END		"ed"
-#define LEX_LITERAL "lt"
-#define LEX_MAIN	"mn"
-#define LEX_PRINT	"pt"
-#define LEX_GREATER "op"
-#define LEX_LESSER	"op"
-#define LEX_EQUAL	"op"
-#define LEX_NOT_EQUAL	"op"
-#define LEX_ASIGNMENT	"op"
-#define LEX_GE		"op"
-#define LEX_LE		"op"
-#define LEX_UNDEF	"ud"
-#define LEX_LEFTHESIS	"("
-#define LEX_RIGHTHESIS	")"
-#define LEX_RECT_LEFTBRACE	"["
-#define LEX_RECT_RIGHTBRACE	"]"
-#define LEX_COMMA	","
+#define LEX_NUMBER	't'
+#define LEX_SYMBOL	't'
+#define LEX_FUNCTION 'f'
+#define LEX_ID		'i'
+#define LEX_BEGIN	'b'
+#define LEX_IF      'a'
+#define LEX_THEN	'b'
+#define LEX_RETURN	'r'
+#define LEX_ELSE    'c'
+#define LEX_END		'e'
+#define LEX_LITERAL 'l'
+#define LEX_MAIN	'm'
+#define LEX_PRINT	'p'
+#define LEX_GREATER 'o'
+#define LEX_LESSER	'o'
+#define LEX_EQUAL	'o'
+#define LEX_NOT_EQUAL	'o'
+#define LEX_ASIGNMENT	'o'
+#define LEX_GE		'o'
+#define LEX_LE		'o'
+#define LEX_UNDEF	'u'
+#define LEX_LEFTHESIS	'('
+#define LEX_RIGHTHESIS	'('
+#define LEX_RECT_LEFTBRACE	'['
+#define LEX_RECT_RIGHTBRACE	']'
+#define LEX_COMMA	','

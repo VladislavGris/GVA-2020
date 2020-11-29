@@ -3,18 +3,18 @@ namespace Lex
 {
 	void ParseAChain(In::IN in, LT::LexTable& lextable, IT::IdTable& idtable)
 	{
-		int lexemeSize = 0, strCount = 1, idxTI = LT_TI_NULLIDX, areaOfVisibility = 0, baseArea=0,subAreaOfVisibility = -1, literalCount = 1;
-		char* lexeme = new char[BUF_SIZE], symbol, token[LEXEMA_FIXSIZE], operation[OPERATOR_FIXSIZE], empty[2] = "", id[ID_MAXSIZE], lexNumBuf[ID_MAXSIZE - 1], lastToken[LEXEMA_FIXSIZE];
-		const char* lexArray[FST_ARRAY_SIZE] = {LEX_NUMBER, LEX_FUNCTION, LEX_SYMBOL, LEX_BEGIN, LEX_IF, LEX_THEN, LEX_RETURN, 
+		int lexemeSize = 0, strCount = 1, idxTI = LT_TI_NULLIDX, areaOfVisibility = 0, baseArea=0, literalCount = 1;
+		char* lexeme = new char[BUF_SIZE], symbol, operation[OPERATOR_FIXSIZE], empty[2] = "", id[ID_MAXSIZE], lexNumBuf[ID_MAXSIZE - 1];
+		char token, lastToken = '0';
+		const char lexArray[FST_ARRAY_SIZE] = {LEX_NUMBER, LEX_FUNCTION, LEX_SYMBOL, LEX_BEGIN, LEX_IF, LEX_THEN, LEX_RETURN, 
 												LEX_ELSE, LEX_END, LEX_MAIN, LEX_PRINT, LEX_ASIGNMENT, LEX_GE,
 												LEX_GREATER, LEX_EQUAL, LEX_NOT_EQUAL, LEX_ID, LEX_LITERAL, LEX_LITERAL };
-		bool wasSeparator = false, isLiteral = false, wasChanged = false, inSubArea = false, areParametrs = false;
+		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false;
 		IT::IDDATATYPE datatype;
 		IT::IDTYPE type;
 		LT::Entry tempEntry;
 		IT::Entry ITTempEntry;
 		memset(lexeme, 0, BUF_SIZE);
-		memset(token, 0, LEXEMA_FIXSIZE);
 		for (int i = 0; i <= in.size; i++)
 		{
 			symbol = in.text[i];
@@ -245,7 +245,7 @@ namespace Lex
 				// wasChanged может быть установлен в true, если были считаны символ или символьная строка
 				if (!wasChanged)
 				{
-					if (!strcmp(lastToken, LEX_FUNCTION) && symbol == START_OF_PARAMETRS)
+					if (lastToken == LEX_FUNCTION && symbol == START_OF_PARAMETRS)
 						areParametrs = true;
 					if (areParametrs && symbol == END_OF_PARAMETERS)
 						areParametrs = false;
@@ -278,27 +278,28 @@ namespace Lex
 								datatype = IT::NUM;
 								break;
 							}
-							strcpy_s(token, lexArray[i]);
+							token = lexArray[i];
 							wasChanged = true;
 							break;
 						}
 					
 				}
 				// Если wasChanged так и остался в false, то лексема не определена
+				// СГЕНЕРИРОВАТЬ ОШИБКУ
 				if (!wasChanged)
-					strcpy_s(token, LEX_UNDEF);
-				strcpy_s(lastToken, token);
-				// Не выводим лексему, если предыдущий символ был сепаратором
+					token = LEX_UNDEF;
+				lastToken = token;
+				// Не выводим лексему, если предыдущий символ был сепаратором(два последовательно идущих сепаратора)
 				if (!wasSeparator)
 				{
-					if (!strcmp(token, LEX_EQUAL))		// Заполнение поля operptorSymbol
+					if (token == LEX_EQUAL)		// Заполнение поля operptorSymbol если токен распознан как операция
 						strcpy_s(operation, lexeme);
 					else
 						strcpy_s(operation, empty);
-					if (!strcmp(token, LEX_ID) || !strcmp(token, LEX_LITERAL))
+					if (token == LEX_ID || token == LEX_LITERAL)
 					{
 						memset(id, 0, ID_MAXSIZE);
-						if (!strcmp(token, LEX_ID))
+						if (token == LEX_ID)
 						{
 							for (int i = 0; i < (ID_MAXSIZE - 1); i++)
 								id[i] = lexeme[i];
@@ -312,6 +313,7 @@ namespace Lex
 								id[i + 1] = lexNumBuf[i];
 						}
 						idxTI = IT::IsId(idtable, id, areaOfVisibility);
+						// СГЕНЕРИРОВАТЬ ИСКЛЮЧЕНИЕ ЕСЛИ ФУНКЦИИ НЕ ОБЪЯВЛЕНО В ОБЛАСТИ
 						if (type == IT::F && idxTI == TI_NULLIDX)
 							idxTI = IT::IsId(idtable, id, FUNCTION_AREA);
 						if (idxTI == TI_NULLIDX)
@@ -327,22 +329,20 @@ namespace Lex
 					LT::Add(lextable, tempEntry);
 				}
 				// Входим в область видимости по символу ( и по main
-				if ((symbol == START_OF_PARAMETRS && areaOfVisibility == 0) || !strcmp(token, LEX_MAIN))
+				if ((symbol == START_OF_PARAMETRS && areaOfVisibility == 0) || token == LEX_MAIN)
 				{
 					areaOfVisibility = ++baseArea;
 				}
 				// Выходим из области видимости по end
-				if (!strcmp(token, LEX_END))
+				if (token == LEX_END)
 				{
 					areaOfVisibility = 0;
 				}
-				memset(lexeme, 0, BUF_SIZE);
 				// Определение сепараторов, которые должны выводиться в таблицу лексем
 				if (IsLexSeparator(symbol))
 				{
-					lexeme[0] = symbol;
 					strcpy_s(operation, empty);
-					tempEntry = LT::FillEntry(lexeme, strCount, TI_NULLIDX, operation);
+					tempEntry = LT::FillEntry(symbol, strCount, TI_NULLIDX, operation);
 					LT::Add(lextable, tempEntry);
 				}
 				// Определение начала символа или символьной строки
@@ -362,7 +362,7 @@ namespace Lex
 			if (IsLiteralSeparator(symbol))
 			{
 				isLiteral = false;
-				strcpy_s(token, LEX_LITERAL);
+				token = LEX_LITERAL;
 				wasChanged = true;
 				type = IT::L;
 				datatype = IT::SYM;

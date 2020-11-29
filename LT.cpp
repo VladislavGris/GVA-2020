@@ -9,12 +9,11 @@ namespace LT
 		newTable.table = new Entry[newTable.maxsize];
 		return newTable;
 	}
-	Entry FillEntry(char* lexema, int strNum, int id, char* operatorSymbol)
+	Entry FillEntry(char lexema, int strNum, int id, char* operatorSymbol)
 	{
 		Entry entry;
 		entry.idxTI = id;
-		memset(entry.lexema, 0, LEXEMA_FIXSIZE);
-		strcpy_s(entry.lexema, lexema);
+		entry.lexema = lexema;
 		entry.sn = strNum;
 		strcpy_s(entry.operptorSymbol,operatorSymbol);
 		return entry;
