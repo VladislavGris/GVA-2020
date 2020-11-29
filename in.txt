@@ -28,8 +28,8 @@ number a <- 2x101
 number b <- 10x13
 symbol c <- 'c'
 symbol d
-symbol[6] hello <- "Привет"
-symbol[6] Hello <- "выходные данные"
+symbol hello[6] <- "Привет"
+symbol Hello[6] <- "выходные данные"
 b <- 8x11
 d <- 'd'
 number g <- Comparsion(a, b)

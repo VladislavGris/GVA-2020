@@ -8,7 +8,7 @@
 #include <cstring>
 #define BUF_SIZE 100
 #define END_OF_INSTRUCTION	'\n'
-#define FST_ARRAY_SIZE		19
+#define FST_ARRAY_SIZE		20
 #define START_OF_LITERAL	'l'
 #define START_OF_SUBAREA	'{'
 #define END_OF_SUBAREA		'}'

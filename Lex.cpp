@@ -8,7 +8,7 @@ namespace Lex
 		char token, lastToken = '0';
 		const char lexArray[FST_ARRAY_SIZE] = {LEX_NUMBER, LEX_FUNCTION, LEX_SYMBOL, LEX_BEGIN, LEX_IF, LEX_THEN, LEX_RETURN, 
 												LEX_ELSE, LEX_END, LEX_MAIN, LEX_PRINT, LEX_ASIGNMENT, LEX_GE,
-												LEX_GREATER, LEX_EQUAL, LEX_NOT_EQUAL, LEX_ID, LEX_LITERAL, LEX_LITERAL };
+												LEX_GREATER, LEX_EQUAL, LEX_NOT_EQUAL, LEX_ID, LEX_LITERAL, LEX_LITERAL,LEX_LITERAL };
 		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false;
 		IT::IDDATATYPE datatype;
 		IT::IDTYPE type;
@@ -227,7 +227,19 @@ namespace Lex
 									FST::RELATION('9',3),FST::RELATION('0',3)),
 						FST::NODE()
 					},
-					// 18 8x(1|2|3|4|5|6|7|8|9|0)* | 2x(1|2|3|4|5|6|7|8|9|0)*
+					// 18 (1|2|3|4|5|6|7|8|9|0)*
+					{
+						lexeme,
+						2,
+						FST::NODE(20, FST::RELATION('1',0), FST::RELATION('2',0), FST::RELATION('3',0), FST::RELATION('4',0),
+									FST::RELATION('5',0), FST::RELATION('6',0), FST::RELATION('7',0), FST::RELATION('8',0),
+									FST::RELATION('9',0),FST::RELATION('0',0),
+									FST::RELATION('1',1), FST::RELATION('2',1), FST::RELATION('3',1), FST::RELATION('4',1),
+									FST::RELATION('5',1), FST::RELATION('6',1), FST::RELATION('7',1), FST::RELATION('8',1),
+									FST::RELATION('9',1),FST::RELATION('0',1)),
+						FST::NODE()
+					},
+					// 19 8x(1|2|3|4|5|6|7|8|9|0)* | 2x(1|2|3|4|5|6|7|8|9|0)*
 					{
 						lexeme,
 						4,
@@ -273,7 +285,7 @@ namespace Lex
 								else
 									type = IT::V;
 								break;
-							case 17: case 18:			// 10x... || 8x... || 2x...
+							case 17: case 18: case 19:			// 10x... || 8x... || 2x...
 								type = IT::L;
 								datatype = IT::NUM;
 								break;
