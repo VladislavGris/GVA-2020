@@ -22,14 +22,13 @@ int _tmain(int argc, _TCHAR* argv[])
 		LT::PrintLexTable(lex.lextable);
 		IT::PrintIDTable(lex.idtable);
 #endif
-#ifdef MFST
+#ifdef MFSTT
 		MFST_TRACE_START
 #endif
 		MFST::Mfst mfst(lex, GRB::getGreibach());
 		mfst.start();
 		mfst.savededucation();
 		mfst.printrules();
-		//Log::WriteInfo(log, "Тест: без ошибок");
 		Log::Close(log);
 	}
 	catch (Error::ERROR e)

@@ -95,16 +95,22 @@ namespace MFST
 					GRB::Rule::Chain chain;
 					if ((nrulechain = rule.getNextChain(lenta[lenta_position], chain, nrulechain + 1)) >= 0)
 					{
+#ifdef MFSTT
 						MFST_TRACE1
+#endif
 							savestate();
 						st.pop();
 						push_chain(chain);
 						rc = NS_OK;
+#ifdef MFSTT
 						MFST_TRACE2
+#endif
 					}
 					else
 					{
+#ifdef MFSTT
 						MFST_TRACE4("TNS_NORULECHAIN/NS_NORULE")
+#endif
 							savediagnosis(NS_NORULECHIN); rc = reststate() ? NS_NORULECHIN : NS_NORULE;
 					};
 				}
@@ -113,18 +119,24 @@ namespace MFST
 			else if ((st.top() == lenta[lenta_position]))
 			{
 				lenta_position++; st.pop(); nrulechain = -1; rc = TS_OK;
+#ifdef MFSTT
 				MFST_TRACE3
+#endif
 			}
 			else
 			{
+#ifdef MFSTT
 				MFST_TRACE4("TS_NOK/NS_NORULECHAIN")
+#endif
 					rc = reststate() ? TS_NOK : NS_NORULECHIN;
 			};
 		}
 		else
 		{
 			rc = LENTA_END;
+#ifdef MFSTT
 			MFST_TRACE4("LENTA_END")
+#endif
 		};
 		return rc;
 	}
@@ -136,7 +148,9 @@ namespace MFST
 	bool Mfst::savestate()
 	{
 		storestate.push(MfstState(lenta_position, st, nrule, nrulechain));
+#ifdef MFSTT
 		MFST_TRACE6("SAVESTATE:", storestate.size());
+#endif
 		return true;
 	};
 	bool Mfst::reststate()
@@ -151,8 +165,10 @@ namespace MFST
 			nrule = state.nrule;
 			nrulechain = state.nrulechain;
 			storestate.pop();
+#ifdef MFSTT
 			MFST_TRACE5("RESSTATE")
 				MFST_TRACE2
+#endif
 		};
 		return rc;
 	};
@@ -175,7 +191,7 @@ namespace MFST
 		char buf[MFST_DIAGN_MAXSIZE];
 		rc_step = step();
 		while (rc_step == NS_OK || rc_step == NS_NORULECHIN || rc_step == TS_OK || rc_step == TS_NOK) rc_step = step();
-
+#ifdef MFSTT
 		switch (rc_step)
 		{
 		case LENTA_END:		MFST_TRACE4("------>LENTA_END")
@@ -194,6 +210,7 @@ namespace MFST
 		case NS_ERROR:		MFST_TRACE4("------>NS_ERROR") break;
 		case SURPRISE:		MFST_TRACE4("------>SURPRISE") break;
 		};
+#endif
 		return rc;
 	}
 	char* Mfst::getCst(char* buf)
@@ -238,7 +255,9 @@ namespace MFST
 			/*state = storestate._Get_container()[k];*/
 			state = Get_Container(storestate, k);
 			rule = grebach.getRule(state.nrule);
+#ifdef MFSTT
 			MFST_TRACE7
+#endif
 		};
 	};
 	bool Mfst::savededucation()

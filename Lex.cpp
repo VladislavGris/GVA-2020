@@ -19,6 +19,7 @@ namespace Lex
 		for (int i = 0; i <= in.size; i++)
 		{
 			symbol = in.text[i];
+			// Работа с комментариями
 			if (isCommentary)
 			{
 				if (symbol == END_OF_INSTRUCTION)
