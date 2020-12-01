@@ -18,16 +18,17 @@ int _tmain(int argc, _TCHAR* argv[])
 		Log::WriteInfo(log, "----Лексический анализ----");
 		if (!Lex::ParseAChain(in, lex.lextable, lex.idtable, log))
 			Log::WriteInfo(log, "Лексический анализ выполнен успешно");
-		MFST_TRACE_START
-		MFST::Mfst mfst(lex, GRB::getGreibach());
-		mfst.start();
-		mfst.savededucation();
-		mfst.printrules();
-		
 #ifdef PRINT_TABLES
 		LT::PrintLexTable(lex.lextable);
 		IT::PrintIDTable(lex.idtable);
 #endif
+#ifdef MFST
+		MFST_TRACE_START
+#endif
+		MFST::Mfst mfst(lex, GRB::getGreibach());
+		mfst.start();
+		mfst.savededucation();
+		mfst.printrules();
 		//Log::WriteInfo(log, "Тест: без ошибок");
 		Log::Close(log);
 	}

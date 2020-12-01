@@ -9,7 +9,7 @@ namespace Lex
 		const char lexArray[FST_ARRAY_SIZE] = { LEX_NUMBER, LEX_FUNCTION, LEX_SYMBOL, LEX_BEGIN, LEX_IF, LEX_THEN, LEX_RETURN,
 												LEX_ELSE, LEX_END, LEX_MAIN, LEX_PRINT,LEX_LESSER, LEX_ASIGNMENT, LEX_GE,
 												LEX_GREATER, LEX_EQUAL, LEX_NOT_EQUAL, LEX_ID, LEX_LITERAL, LEX_LITERAL,LEX_LITERAL };
-		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false, wasError = false;
+		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false, wasError = false, isCommentary = false;
 		IT::IDDATATYPE datatype;
 		IT::IDTYPE type;
 		LT::Entry tempEntry;
@@ -19,6 +19,21 @@ namespace Lex
 		for (int i = 0; i <= in.size; i++)
 		{
 			symbol = in.text[i];
+			if (isCommentary)
+			{
+				if (symbol == END_OF_INSTRUCTION)
+				{
+					strCount++;
+					position = 0;
+					isCommentary = false;
+				}
+				continue;
+			}
+			if (symbol == COMMENTARY)
+			{
+				isCommentary = true;
+				continue;
+			}
 			position++;
 			if ((IsSeparator(symbol) && !isLiteral) || i == in.size)
 			{

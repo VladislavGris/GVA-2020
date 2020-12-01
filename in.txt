@@ -1,4 +1,4 @@
-number function Comparsion(number a, number b)
+number function Comparsion(number a, number b); Функция сравнивает 2 числа и возвращает наибольшее
 begin
 if[a > b] then
 {
@@ -10,15 +10,15 @@ return b
 }
 end
 
-number function Equality(number a, number b)
+number function Equality(number a, number b); Функция определяет, равны ли 2 числа
 begin
 if[a = b] then
 {
-return 10x1
+return 10x1; Возвращает 1, если числа равны
 }
 else
 {
-return 10x0
+return 10x0; Возвращает 0, если числа не равны
 }
 end
 
