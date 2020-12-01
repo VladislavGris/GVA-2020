@@ -45,10 +45,10 @@
     <ClCompile Include="Lex.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="MFST.cpp">
+    <ClCompile Include="GRB.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="GRB.cpp">
+    <ClCompile Include="MFST.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
