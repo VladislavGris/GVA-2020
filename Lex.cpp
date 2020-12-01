@@ -3,13 +3,13 @@ namespace Lex
 {
 	bool ParseAChain(In::IN in, LT::LexTable& lextable, IT::IdTable& idtable, Log::LOG log)
 	{
-		int lexemeSize = 0, strCount = 1,position = 0,  idxTI = LT_TI_NULLIDX, areaOfVisibility = 0, baseArea=0, literalCount = 1;
+		int lexemeSize = 0, strCount = 1, position = 0, idxTI = LT_TI_NULLIDX, areaOfVisibility = 0, baseArea = 0, literalCount = 1;
 		char* lexeme = new char[BUF_SIZE], symbol, operation[OPERATOR_FIXSIZE], empty[2] = "", id[ID_MAXSIZE], lexNumBuf[ID_MAXSIZE - 1];
 		char token, lastToken = '0';
-		const char lexArray[FST_ARRAY_SIZE] = {LEX_NUMBER, LEX_FUNCTION, LEX_SYMBOL, LEX_BEGIN, LEX_IF, LEX_THEN, LEX_RETURN, 
-												LEX_ELSE, LEX_END, LEX_MAIN, LEX_PRINT, LEX_ASIGNMENT, LEX_GE,
+		const char lexArray[FST_ARRAY_SIZE] = { LEX_NUMBER, LEX_FUNCTION, LEX_SYMBOL, LEX_BEGIN, LEX_IF, LEX_THEN, LEX_RETURN,
+												LEX_ELSE, LEX_END, LEX_MAIN, LEX_PRINT,LEX_LESSER, LEX_ASIGNMENT, LEX_GE,
 												LEX_GREATER, LEX_EQUAL, LEX_NOT_EQUAL, LEX_ID, LEX_LITERAL, LEX_LITERAL,LEX_LITERAL };
-		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false, wasError = false; 
+		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false, wasError = false;
 		IT::IDDATATYPE datatype;
 		IT::IDTYPE type;
 		LT::Entry tempEntry;
@@ -143,15 +143,22 @@ namespace Lex
 						FST::NODE(1, FST::RELATION('t',5)),
 						FST::NODE()
 					},
-					// 11 < , <-
+					// 11 <
+					{
+						lexeme,
+						2,
+						FST::NODE(1, FST::RELATION('<', 1)),
+						FST::NODE()
+					},
+					// 12 <-
 					{
 						lexeme,
 						3,
-						FST::NODE(2, FST::RELATION('<', 2), FST::RELATION('<', 1)),
+						FST::NODE(1, FST::RELATION('<', 1)),
 						FST::NODE(1, FST::RELATION('-', 2)),
 						FST::NODE()
 					},
-					// 12 GE , LE
+					// 13 GE , LE
 					{
 						lexeme,
 						3,
@@ -159,28 +166,28 @@ namespace Lex
 						FST::NODE(1, FST::RELATION('E', 2)),
 						FST::NODE()
 					},
-					// 13 >
+					// 14 >
 					{
 						lexeme,
 						2,
 						FST::NODE(1, FST::RELATION('>',1)),
 						FST::NODE()
 					},
-					// 14 =
+					// 15 =
 					{
 						lexeme,
 						2,
 						FST::NODE(1, FST::RELATION('=',1)),
 						FST::NODE()
 					},
-					// 15 #
+					// 16 #
 					{
 						lexeme,
 						2,
 						FST::NODE(1, FST::RELATION('#',1)),
 						FST::NODE()
 					},
-					// 16 identifier
+					// 17 identifier
 					{
 						lexeme,
 						2,
@@ -214,7 +221,7 @@ namespace Lex
 									FST::RELATION('Y',1),FST::RELATION('Z',1)),
 						FST::NODE()
 					},
-					// 17 10x(1|2|3|4|5|6|7|8|9|0)*
+					// 18 10x(1|2|3|4|5|6|7|8|9|0)*
 					{
 						lexeme,
 						5,
@@ -229,7 +236,7 @@ namespace Lex
 									FST::RELATION('9',3),FST::RELATION('0',3)),
 						FST::NODE()
 					},
-					// 18 (1|2|3|4|5|6|7|8|9|0)*
+					// 19 (1|2|3|4|5|6|7|8|9|0)*
 					{
 						lexeme,
 						2,
@@ -241,7 +248,7 @@ namespace Lex
 									FST::RELATION('9',1),FST::RELATION('0',1)),
 						FST::NODE()
 					},
-					// 19 8x(1|2|3|4|5|6|7|8|9|0)* | 2x(1|2|3|4|5|6|7|8|9|0)*
+					// 20 8x(1|2|3|4|5|6|7|8|9|0)* | 2x(1|2|3|4|5|6|7|8|9|0)*
 					{
 						lexeme,
 						4,
@@ -268,7 +275,7 @@ namespace Lex
 					for (int i = 0; i < FST_ARRAY_SIZE; i++)
 						if (FST::execute(fstArray[i]))
 						{
-							switch (i) 
+							switch (i)
 							{
 							case 0:						// number
 								datatype = IT::NUM;
@@ -287,7 +294,7 @@ namespace Lex
 								else
 									type = IT::V;
 								break;
-							case 17: case 18: case 19:			// 10x... || 8x... || 2x... || ...
+							case 18: case 19: case 20:			// 10x... || 8x... || 2x... || ...
 								type = IT::L;
 								datatype = IT::NUM;
 								break;
@@ -296,7 +303,7 @@ namespace Lex
 							wasChanged = true;
 							break;
 						}
-					
+
 				}
 				// Не выводим лексему, если предыдущий символ был сепаратором(два последовательно идущих сепаратора)
 				if (!wasSeparator)
@@ -310,7 +317,7 @@ namespace Lex
 						wasError = true;
 					}
 					lastToken = token;
-					if (token == LEX_EQUAL)		// Заполнение поля operptorSymbol если токен распознан как операция
+					if (token == LEX_EQUAL || token == LEX_ASIGNMENT)		// Заполнение поля operptorSymbol если токен распознан как операция
 						strcpy_s(operation, lexeme);
 					else
 						strcpy_s(operation, empty);
@@ -347,7 +354,7 @@ namespace Lex
 					}
 					else
 						tempEntry = LT::FillEntry(token, strCount, LT_TI_NULLIDX, operation);
-					if(token != LEX_UNDEF)
+					if (token != LEX_UNDEF)
 						LT::Add(lextable, tempEntry);
 				}
 				// Входим в область видимости по символу ( и по main

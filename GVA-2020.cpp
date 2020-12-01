@@ -3,8 +3,9 @@
 int _tmain(int argc, _TCHAR* argv[])
 {
 	setlocale(LC_CTYPE, "rus");
-	LT::LexTable lextable = LT::Create(LT_MAXSIZE);
-	IT::IdTable idtable = IT::Create(TI_MAXSIZE);
+	Lex::LEX lex;
+	lex.lextable = LT::Create(LT_MAXSIZE);
+	lex.idtable = IT::Create(TI_MAXSIZE);
 	Log::LOG log = Log::INITLOG;
 	try
 	{
@@ -15,11 +16,17 @@ int _tmain(int argc, _TCHAR* argv[])
 		In::IN in = In::getin(parm.in);
 		Log::WriteIn(log, in);
 		Log::WriteInfo(log, "----Лексический анализ----");
-		if (!Lex::ParseAChain(in, lextable, idtable, log))
+		if (!Lex::ParseAChain(in, lex.lextable, lex.idtable, log))
 			Log::WriteInfo(log, "Лексический анализ выполнен успешно");
+		MFST_TRACE_START
+		MFST::Mfst mfst(lex, GRB::getGreibach());
+		mfst.start();
+		mfst.savededucation();
+		mfst.printrules();
+		
 #ifdef PRINT_TABLES
-		LT::PrintLexTable(lextable);
-		IT::PrintIDTable(idtable);
+		LT::PrintLexTable(lex.lextable);
+		IT::PrintIDTable(lex.idtable);
 #endif
 		//Log::WriteInfo(log, "Тест: без ошибок");
 		Log::Close(log);

@@ -57,4 +57,5 @@ if[a # 10x3] then
 {
 print("a не равно 3")
 }
+return 0
 end
