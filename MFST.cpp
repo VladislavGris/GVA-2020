@@ -271,9 +271,7 @@ namespace MFST
 		{
 			state = Get_Container(storestate, k);
 			rule = grebach.getRule(state.nrule);
-#ifdef MFSTT
 			MFST_TRACE7
-#endif
 		};
 	};
 	bool Mfst::savededucation()

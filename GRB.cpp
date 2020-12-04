@@ -38,9 +38,11 @@ namespace GRB
             Rule::Chain(4, TS('i'), TS('('), NS('W'), TS(')'))
         ),
         Rule(NS('F'), GRB_ERROR_SERIES + 3, // Ошибка в параметрах функции
-            2,
+            4,
             Rule::Chain(4, TS('t'), TS('i'), TS(','), NS('F')),
-            Rule::Chain(2, TS('t'), TS('i'))
+            Rule::Chain(2, TS('t'), TS('i')),
+            Rule::Chain(5,TS('t'), TS('i'), TS('['), NS('E'), TS(']')),
+            Rule::Chain(7, TS('t'), TS('i'), TS('['), NS('E'), TS(']'), TS(','), NS('F'))
         ),
         Rule(NS('W'), GRB_ERROR_SERIES + 4, // Ошибка в параметрах вызываемой функции
             4,

@@ -34,7 +34,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		else
 			throw ERROR_THROW(306);
 		mfst.savededucation();
+//#ifdef MFSTT
 		mfst.printrules();
+//#endif
+		Semantic::CheckSemantic(log, lex.lextable, lex.idtable, mfst);
 		Log::Close(log);
 	}
 	catch (Error::ERROR e)
