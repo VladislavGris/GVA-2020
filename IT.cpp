@@ -81,4 +81,43 @@ namespace IT
 	{
 		delete& idtable;
 	}
+	void PrintToFile(IdTable& idtable)
+	{
+		std::ofstream fout;
+		fout.open("IT.txt");
+		fout << "===========(Таблица идентификаторов)===========" << std::endl;
+		fout << " №  |  ID  | AREA | DATATYPE |   TYPE   | LTID|" << std::endl;
+
+		for (int i = 0; i < idtable.size; i++)
+		{
+			fout << std::setw(4) << i << '|';
+			fout << std::setw(6) << idtable.table[i].id << '|';
+			fout << std::setw(6) << idtable.table[i].areaOfVisibility << '|';
+			switch (idtable.table[i].iddatatype)
+			{
+			case NUM:
+				fout << std::setw(11) << "NUMBER|";
+				break;
+			case SYM:
+				fout << std::setw(11) << "SYMBOL|";
+			}
+			switch (idtable.table[i].idtype)
+			{
+			case V:
+				fout << std::setw(11) << "VARIABLE|";
+				break;
+			case F:
+				fout << std::setw(11) << "FUNCTION|";
+				break;
+			case P:
+				fout << std::setw(11) << "PARAMETER|";
+				break;
+			case L:
+				fout << std::setw(11) << "LITERAL|";
+				break;
+			}
+			fout << std::setw(5) << idtable.table[i].idxfirstLE <<'|'<< std::endl;
+		}
+		fout.close();
+	}
 }

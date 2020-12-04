@@ -13,6 +13,7 @@
 #define LITERAL				4
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 namespace IT
 {
 	enum IDDATATYPE {
@@ -48,4 +49,5 @@ namespace IT
 	int IsId(IdTable& idtable, char id[ID_MAXSIZE], int areaofvisibility);	// возврат: номер строки (если есть), TI_NULLIDX (если нет)
 	void PrintIDTable(IdTable& idtable);
 	void Delete(IdTable& idtable);				// удалить таблицу лексем (освободить память)
+	void PrintToFile(IdTable& idtable);
 }

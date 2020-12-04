@@ -61,4 +61,27 @@ namespace LT
 			std::cout << std::setw(3) << lextable.table[i].operptorSymbol << '|' << std::endl;
 		}
 	}
+	void PrintToFile(LexTable& lextable)
+	{
+		std::ofstream fout;
+		fout.open("LT.txt");
+		fout << "--- Таблица лексем ---" << std::endl;
+		fout << std::setw(3) << '№' << std::setw(3) << '|';
+		fout << std::setw(7) << "strNum|";
+		fout << std::setw(4) << "lex|";
+		fout << std::setw(6) << "idxTI|";
+		fout << std::setw(3) << "op|" << std::endl;
+		for (int i = 0; i < lextable.size; i++)
+		{
+			fout << std::setw(5) << i << '|';
+			fout << std::setw(6) << lextable.table[i].sn << '|';
+			fout << std::setw(3) << lextable.table[i].lexema << '|';
+			if (lextable.table[i].idxTI == LT_TI_NULLIDX)
+				fout << std::setw(6) << '|';
+			else
+				fout << std::setw(5) << lextable.table[i].idxTI << '|';
+			fout << std::setw(3) << lextable.table[i].operptorSymbol << '|' << std::endl;
+		}
+		fout.close();
+	}
 }

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <ctype.h>
-
+#include <fstream>
 namespace LT
 {
 	struct Entry
@@ -28,4 +28,5 @@ namespace LT
 	void PrintLexTable(LexTable& lextable);
 	void RemoveEntry(LexTable& lextable, int position);
 	void Delete(LexTable& lextable);
+	void PrintToFile(LexTable& lextable);
 }

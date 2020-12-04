@@ -4,7 +4,7 @@
 #include <iomanip>
 #include "GRB.h"
 #include "Lex.h"
-#define MFSTT
+//#define MFSTT
 #define MFST_DIAGN_MAXSIZE 2*ERROR_MAXSIZE_MESSAGE
 #define MFST_DIAGN_NUMBER 3
 typedef std::stack<short>   MFSTSTACK;
@@ -78,7 +78,7 @@ namespace MFST
         bool reststate();
         bool push_chain(GRB::Rule::Chain chain);
         RC_STEP step();
-        bool start();
+        bool start(Log::LOG log);
         bool savediagnosis(RC_STEP pprc_step);
         void printrules();
 
