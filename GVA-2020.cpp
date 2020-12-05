@@ -37,6 +37,7 @@ int _tmain(int argc, _TCHAR* argv[])
 //#ifdef MFSTT
 		mfst.printrules();
 //#endif
+		Log::WriteInfo(log, "---- Семантический анализ ----\nНачало работы семантического анализатора");
 		Semantic::CheckSemantic(log, lex.lextable, lex.idtable, mfst);
 		Log::Close(log);
 	}

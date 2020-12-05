@@ -9,7 +9,10 @@ else
 return b
 }
 end
-
+number function Rand(number a[])
+begin
+print(a)
+end
 number function Equality(number a, number b); Функция определяет, равны ли 2 числа
 begin
 if[a = b] then
@@ -28,6 +31,7 @@ number a <- 2x101
 number b <- 10x13
 symbol c <- 'c'
 symbol d
+symbol y[2]
 symbol hello[6] <- "Привет"
 symbol Hello[6] <- "выходные данные"
 b <- 8x11

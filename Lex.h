@@ -15,6 +15,7 @@
 #define START_OF_PARAMETRS	'('
 #define END_OF_PARAMETERS	')'
 #define COMMENTARY			';'
+#define START_OF_INDEX		'['
 #define FUNCTION_AREA		0
 namespace Lex
 {

@@ -22,7 +22,9 @@ namespace IT
 	enum IDTYPE {
 		V = 1, F = 2, P = 3, L = 4
 	};
-
+	enum NOTATION {
+		D = 10, O = 8, B = 2
+	};
 	struct Entry
 	{
 		int idxfirstLE;			// индекс первой строки в таблице лексем
@@ -30,9 +32,14 @@ namespace IT
 		IDDATATYPE iddatatype;	// тип данных
 		IDTYPE idtype;			// тип идентификатора
 		int areaOfVisibility;	// область видимости
+		bool declaration, assignment, isArray;
 		union
 		{
-			int vint;			// значение integer
+			struct
+			{
+				int value;
+				NOTATION notation;
+			} num;
 			char str[TI_STR_MAXSIZE];
 		} value;	// значение идентификатора
 	};

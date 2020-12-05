@@ -9,7 +9,7 @@ namespace Lex
 		const char lexArray[FST_ARRAY_SIZE] = { LEX_NUMBER, LEX_FUNCTION, LEX_SYMBOL, LEX_BEGIN, LEX_IF, LEX_THEN, LEX_RETURN,
 												LEX_ELSE, LEX_END, LEX_MAIN, LEX_PRINT,LEX_LESSER, LEX_ASIGNMENT, LEX_GE,
 												LEX_GREATER, LEX_EQUAL, LEX_NOT_EQUAL, LEX_ID, LEX_LITERAL, LEX_LITERAL,LEX_LITERAL };
-		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false, wasError = false, isCommentary = false;
+		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false, wasError = false, isCommentary = false, arrayLiteral = false;
 		IT::IDDATATYPE datatype;
 		IT::IDTYPE type;
 		LT::Entry tempEntry;
@@ -284,10 +284,12 @@ namespace Lex
 				{
 					if (lastToken == LEX_FUNCTION && symbol == START_OF_PARAMETRS)
 						areParametrs = true;
-					if (areParametrs && symbol == END_OF_PARAMETERS)
-						areParametrs = false;
 					if (symbol == START_OF_PARAMETRS)
 						type = IT::F;
+					else if (areParametrs)
+						type = IT::P;
+					else
+						type = IT::V;
 					for (int i = 0; i < FST_ARRAY_SIZE; i++)
 						if (FST::execute(fstArray[i]))
 						{
@@ -295,20 +297,12 @@ namespace Lex
 							{
 							case 0:						// number
 								datatype = IT::NUM;
-								if (areParametrs)
-									type = IT::P;
-								else
-									type = IT::V;
 								break;
 							case 1:						// function
 								type = IT::F;
 								break;
 							case 2:						// symbol
 								datatype = IT::SYM;
-								if (areParametrs)
-									type = IT::P;
-								else
-									type = IT::V;
 								break;
 							case 18: case 19: case 20:			// 10x... || 8x... || 2x... || ...
 								type = IT::L;
@@ -319,7 +313,8 @@ namespace Lex
 							wasChanged = true;
 							break;
 						}
-
+					if (areParametrs && symbol == END_OF_PARAMETERS)
+						areParametrs = false;
 				}
 				// Не выводим лексему, если предыдущий символ был сепаратором(два последовательно идущих сепаратора)
 				if (!wasSeparator)
@@ -332,7 +327,6 @@ namespace Lex
 						Log::WriteError(log, e);
 						wasError = true;
 					}
-					lastToken = token;
 					if (token == LEX_EQUAL || token == LEX_ASIGNMENT)		// Заполнение поля operptorSymbol если токен распознан как операция
 						strcpy_s(operation, lexeme);
 					else
@@ -354,6 +348,8 @@ namespace Lex
 								id[i + 1] = lexNumBuf[i];
 						}
 						idxTI = IT::IsId(idtable, id, areaOfVisibility);
+						if (lastToken == LEX_SYMBOL && idxTI != TI_NULLIDX)
+							throw ERROR_THROW_IN(204, strCount, position);
 						if (type == IT::F && idxTI == TI_NULLIDX)
 						{
 							idxTI = IT::IsId(idtable, id, FUNCTION_AREA);
@@ -364,6 +360,11 @@ namespace Lex
 						{
 							ITTempEntry = IT::FillEntry(lextable.size, id, datatype, type, areaOfVisibility);
 							idxTI = idtable.size;
+							if (symbol == START_OF_INDEX || arrayLiteral)
+							{
+								ITTempEntry.isArray = true;
+								arrayLiteral = false;
+							}
 							IT::Add(idtable, ITTempEntry);
 						}
 						tempEntry = LT::FillEntry(token, strCount, idxTI, operation);
@@ -372,6 +373,7 @@ namespace Lex
 						tempEntry = LT::FillEntry(token, strCount, LT_TI_NULLIDX, operation);
 					if (token != LEX_UNDEF)
 						LT::Add(lextable, tempEntry);
+					lastToken = token;
 				}
 				// Входим в область видимости по символу ( и по main
 				if ((symbol == START_OF_PARAMETRS && areaOfVisibility == 0) || token == LEX_MAIN)
@@ -409,6 +411,8 @@ namespace Lex
 			// встреча символов ' и ", обозначающих конец символа или символьной строки
 			if (IsLiteralSeparator(symbol))
 			{
+				if (symbol == '"')
+					arrayLiteral = true;
 				isLiteral = false;
 				token = LEX_LITERAL;
 				wasChanged = true;

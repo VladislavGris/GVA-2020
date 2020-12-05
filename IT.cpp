@@ -26,6 +26,17 @@ namespace IT
 		entry.iddatatype = datatype;
 		entry.idtype = type;
 		entry.areaOfVisibility = areaofvisibiliti;
+		if (type == IDTYPE::L)
+		{
+			entry.declaration = true;
+			entry.assignment = true;
+		}
+		else
+		{
+			entry.declaration = false;
+			entry.assignment = false;
+		}
+		entry.isArray = false;
 		return entry;
 	}
 	Entry GetEntry(IdTable& idtable, int n)
@@ -116,7 +127,11 @@ namespace IT
 				fout << std::setw(11) << "LITERAL|";
 				break;
 			}
-			fout << std::setw(5) << idtable.table[i].idxfirstLE <<'|'<< std::endl;
+			fout << std::setw(5) << idtable.table[i].idxfirstLE <<'|'/*<< std::endl*/;
+			if (idtable.table[i].isArray)
+				fout << "isArray" << std::endl;
+			else
+				fout << std::endl;
 		}
 		fout.close();
 	}

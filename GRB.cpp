@@ -12,18 +12,20 @@ namespace GRB
             Rule::Chain(6, TS('m'), TS('b'), NS('N'), TS('r'), NS('E'), TS('e'))
         ),
         Rule(NS('N'), GRB_ERROR_SERIES + 1,   // Ошибочный оператор
-            17,
-            Rule::Chain(2, TS('t'), TS('i')),           // Объявление переменной
+            19,
+            Rule::Chain(2, TS('t'), TS('i')),           // Объявление переменной, 01
             Rule::Chain(3, TS('t'), TS('i'), NS('N')),
-            Rule::Chain(5, TS('t'), TS('i'), TS('['), NS('E'), TS(']')),            // Объявление массива
+            Rule::Chain(5, TS('t'), TS('i'), TS('['), NS('E'), TS(']')),            // Объявление массива, 23
             Rule::Chain(6, TS('t'), TS('i'), TS('['), NS('E'), TS(']'), NS('N')),
-            Rule::Chain(4, TS('t'), TS('i'), TS('s'), NS('E')),         // Инициализация переменной
+            Rule::Chain(4, TS('t'), TS('i'), TS('s'), NS('E')),         // Инициализация переменной, 45
             Rule::Chain(5, TS('t'), TS('i'), TS('s'), NS('E'), NS('N')),
-            Rule::Chain(7, TS('t'), TS('i'), TS('['), NS('E'), TS(']'), TS('s'), NS('E')),          // Инициализация массива
+            Rule::Chain(7, TS('t'), TS('i'), TS('['), NS('E'), TS(']'), TS('s'), NS('E')),          // Инициализация массива, 67
             Rule::Chain(8, TS('t'), TS('i'), TS('['), NS('E'), TS(']'), TS('s'), NS('E'), NS('N')),
-            Rule::Chain(3, TS('i'), TS('s'), NS('E')),          // Присвоение значения переменной
+            Rule::Chain(3, TS('i'), TS('s'), NS('E')),          // Присвоение значения переменной, 89
             Rule::Chain(4, TS('i'), TS('s'), NS('E'), NS('N')),
-            Rule::Chain(4, TS('p'), TS('('), NS('E'), TS(')')),          // print(...)
+            Rule::Chain(6, TS('i'), TS('['), NS('E'), TS(']'), TS('s'), NS('E')),   // Присвоение значения элементу массива, 1011
+            Rule::Chain(7, TS('i'), TS('['), NS('E'), TS(']'), TS('s'), NS('E'), NS('N')),
+            Rule::Chain(4, TS('p'), TS('('), NS('E'), TS(')')),          // print(...), 1213
             Rule::Chain(5, TS('p'), TS('('), NS('E'), TS(')'), NS('N')),
             Rule::Chain(10, TS('a'), TS('['), NS('E'), TS('o'), NS('E'), TS(']'), TS('h'), TS('{'), NS('N'), TS('}')),         // if[...]then{...}
             Rule::Chain(11, TS('a'), TS('['), NS('E'), TS('o'), NS('E'), TS(']'), TS('h'), TS('{'), NS('N'), TS('}'), NS('N')),
@@ -32,17 +34,18 @@ namespace GRB
             Rule::Chain(3, TS('r'), NS('E'), NS('N'))
         ),
         Rule(NS('E'), GRB_ERROR_SERIES + 2,   // Ошибка в выражении
-            3,
+            4,
             Rule::Chain(1, TS('i')),
             Rule::Chain(1, TS('l')),
-            Rule::Chain(4, TS('i'), TS('('), NS('W'), TS(')'))
+            Rule::Chain(4, TS('i'), TS('('), NS('W'), TS(')')),
+            Rule::Chain(4, TS('i'), TS('['), NS('E'),TS(']'))
         ),
         Rule(NS('F'), GRB_ERROR_SERIES + 3, // Ошибка в параметрах функции
             4,
             Rule::Chain(4, TS('t'), TS('i'), TS(','), NS('F')),
             Rule::Chain(2, TS('t'), TS('i')),
-            Rule::Chain(5,TS('t'), TS('i'), TS('['), NS('E'), TS(']')),
-            Rule::Chain(7, TS('t'), TS('i'), TS('['), NS('E'), TS(']'), TS(','), NS('F'))
+            Rule::Chain(4,TS('t'), TS('i'), TS('['), TS(']')),
+            Rule::Chain(6, TS('t'), TS('i'), TS('['), TS(']'), TS(','), NS('F'))
         ),
         Rule(NS('W'), GRB_ERROR_SERIES + 4, // Ошибка в параметрах вызываемой функции
             4,
