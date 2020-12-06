@@ -30,11 +30,11 @@ begin
 number a <- 2x101 
 number b <- 10x13
 symbol c <- 'c'
-symbol d
+symbol d <- 1
 number y[2]
 symbol hello[6] <- "Привет"
 symbol Hello[6] <- "выходные данные"
-b <- 8x11
+b <- 8x71
 d <- 'd'
 number g <- Comparsion(a, b)
 Rand(y)

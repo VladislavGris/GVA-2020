@@ -3,6 +3,7 @@
 int _tmain(int argc, _TCHAR* argv[])
 {
 	setlocale(LC_CTYPE, "rus");
+	int semanticErrorsCount = 0;
 	Lex::LEX lex;
 	lex.lextable = LT::Create(LT_MAXSIZE);
 	lex.idtable = IT::Create(TI_MAXSIZE);
