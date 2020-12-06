@@ -428,7 +428,7 @@ namespace Lex
 
 	bool IsSeparator(char symbol)
 	{
-		if (symbol == ' ' || symbol == '\n' || symbol == '\'' || symbol == ',' || symbol == '[' || symbol == ']' || symbol == '(' || symbol == ')' || symbol == '"' || symbol == '{' || symbol == '}')
+		if (symbol == ' ' || symbol == '\n' || symbol == '\'' || symbol == ',' || symbol == '[' || symbol == ']' || symbol == '(' || symbol == ')' || symbol == '"' || symbol == '{' || symbol == '}' || symbol == '\t')
 			return true;
 		return false;
 	}

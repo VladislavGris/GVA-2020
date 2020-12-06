@@ -4,7 +4,7 @@ namespace Semantic
 	void CheckSemantic(Log::LOG log, LT::LexTable& lextable, IT::IdTable& idtable, MFST::Mfst mfst)
 	{
 		bool isMain;
-		int functionReturnType;
+		int functionReturnType, parameterCount = 0, funcProtoParameters = 0;
 		MFST::MfstState state, tempState;
 		GRB::Rule rule;
 		for (int i = 0; i < mfst.storestate.size(); i++)
@@ -89,7 +89,13 @@ namespace Semantic
 				}
 				break;
 			case 2:	// E->...
-				
+				switch (mfst.deducation.nrulechains[i])
+				{
+				case 3:	// i[E]
+					if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 1).lenta_position].idxTI].iddatatype != IT::IDDATATYPE::NUM)
+						throw ERROR_THROW_IN(410, lextable.table[state.lenta_position].sn, 0);	// Индекс массива должен быть задан при поиощи целочисленного значения
+					break;
+				}
 				break;
 			case 3:// F->...
 				switch (mfst.deducation.nrulechains[i])
@@ -101,8 +107,55 @@ namespace Semantic
 				}
 				break;
 			case 4:// W->...
+				switch (mfst.deducation.nrulechains[i])
+				{
+				case 1: case 2:
+					while (MFST::Get_Container(mfst.storestate, i - parameterCount).nrule == PARAMETERS)	// вычисление количества переданнх в функцию параметров
+					{
+						parameterCount++;
+					}
+					for (int j = 0; j < i - parameterCount; j++)
+					{
+						if (MFST::Get_Container(mfst.storestate, j).nrule == START_SYMBOL && MFST::Get_Container(mfst.storestate, j).nrulechain == START_SYMBOL)	// Если встречаем правило для стартового символа грамматики
+						{
+							if (!strcmp(idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, j).lenta_position + 2].idxTI].id, idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount).lenta_position].idxTI].id))
+							{
+								while (MFST::Get_Container(mfst.storestate, j + 1 + funcProtoParameters).nrule == FUNC_PARAMS)
+								{
+									funcProtoParameters++;
+								}
+								if (parameterCount != funcProtoParameters)	// в последствии добавить break
+									throw ERROR_THROW_IN(411, lextable.table[state.lenta_position].sn, 0);
+								for (int h = funcProtoParameters; h > 0; h--)
+								{
+									if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, j + h).lenta_position + 1].idxTI].iddatatype != idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount + h).lenta_position].idxTI].iddatatype)
+										throw ERROR_THROW_IN(412, lextable.table[state.lenta_position].sn, 0);
+									if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, j + h).lenta_position + 1].idxTI].isArray && !idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount + h).lenta_position].idxTI].isArray)
+										throw ERROR_THROW_IN(414, lextable.table[state.lenta_position].sn, 0);
+									if (!idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, j + h).lenta_position + 1].idxTI].isArray && idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount + h).lenta_position].idxTI].isArray)
+										throw ERROR_THROW_IN(413, lextable.table[state.lenta_position].sn, 0);
+								}
+							}
+						}
+					}
+					//std::cout << "---" << std::endl;
+					parameterCount = 0;
+					funcProtoParameters = 0;
+					break;
+				}
 				break;
 			case 5:// V->...
+				switch (mfst.deducation.nrulechains[i])
+				{
+				case 0:
+					if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 1).lenta_position].idxTI].iddatatype != idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 2).lenta_position].idxTI].iddatatype)
+						throw ERROR_THROW_IN(400, lextable.table[state.lenta_position].sn, 0);
+					if (!idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 1).lenta_position].idxTI].declaration || !idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 2).lenta_position].idxTI].declaration)
+						throw ERROR_THROW_IN(402, lextable.table[state.lenta_position].sn, 0);	// Использование необъявленной переменной в условном операторе
+					if (!idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 1).lenta_position].idxTI].assignment || !idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 2).lenta_position].idxTI].assignment)
+						throw ERROR_THROW_IN(403, lextable.table[state.lenta_position].sn, 0);	// Использование в условном операторе переменной, которой не присвоено значение
+					break;
+				}
 				break;
 			}
 		}

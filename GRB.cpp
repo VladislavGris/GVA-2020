@@ -12,7 +12,7 @@ namespace GRB
             Rule::Chain(6, TS('m'), TS('b'), NS('N'), TS('r'), NS('E'), TS('e'))
         ),
         Rule(NS('N'), GRB_ERROR_SERIES + 1,   // ќшибочный оператор
-            19,
+            21,
             Rule::Chain(2, TS('t'), TS('i')),           // ќбъ€вление переменной, 01
             Rule::Chain(3, TS('t'), TS('i'), NS('N')),
             Rule::Chain(5, TS('t'), TS('i'), TS('['), NS('E'), TS(']')),            // ќбъ€вление массива, 23
@@ -31,7 +31,9 @@ namespace GRB
             Rule::Chain(11, TS('a'), TS('['), NS('E'), TS('o'), NS('E'), TS(']'), TS('h'), TS('{'), NS('N'), TS('}'), NS('N')),
             Rule::Chain(11, TS('a'), TS('['), NS('E'), TS('o'), NS('E'), TS(']'), TS('h'), TS('{'), NS('N'), TS('}'), NS('V')),
             Rule::Chain(2, TS('r'), NS('E')),
-            Rule::Chain(3, TS('r'), NS('E'), NS('N'))
+            Rule::Chain(3, TS('r'), NS('E'), NS('N')),
+            Rule::Chain(4, TS('i'), TS('('), NS('W'), TS(')')),
+            Rule::Chain(5, TS('i'), TS('('), NS('W'), TS(')'), NS('N'))
         ),
         Rule(NS('E'), GRB_ERROR_SERIES + 2,   // ќшибка в выражении
             4,
