@@ -186,19 +186,15 @@ namespace Semantic
 					{
 						switch (IT::IsLibFunc(idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount).lenta_position].idxTI].id))
 						{
-						case 1:
+						case 1:				// strlen
 							funcProtoParameters = 1;
 							param[0] = IT::SYM;
 							isArr[0] = true;
-							//IT::IDDATATYPE param[] = { IT::SYM };
-							//bool isArr[] = { true };
 							break;
-						case 2:
+						case 2:				// strlen
 							funcProtoParameters = 2;
 							param[0] = IT::SYM; param[1] = IT::SYM;
 							isArr[0] = true; isArr[1] = true;
-							//IT::IDDATATYPE param[] = { IT::SYM, IT::SYM };
-							//bool isArr[] = { true, true };
 							break;
 						}
 						if (funcProtoParameters != parameterCount)
@@ -213,6 +209,18 @@ namespace Semantic
 							if (param[h] != idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - h).lenta_position].idxTI].iddatatype)
 							{
 								e = ERROR_THROW_IN(412, lextable.table[state.lenta_position].sn, 0);
+								Log::WriteError(log, e);
+								errorCount++;
+							}
+							if (isArr[h] && !idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - h).lenta_position].idxTI].isArray)
+							{
+								e = ERROR_THROW_IN(414, lextable.table[state.lenta_position].sn, 0);
+								Log::WriteError(log, e);
+								errorCount++;
+							}
+							if (!isArr[h] && idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - h).lenta_position].idxTI].isArray)
+							{
+								e = ERROR_THROW_IN(413, lextable.table[state.lenta_position].sn, 0);
 								Log::WriteError(log, e);
 								errorCount++;
 							}
