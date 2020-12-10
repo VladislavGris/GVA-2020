@@ -24,7 +24,7 @@
 #define LEX_LE		'o'
 #define LEX_UNDEF	'u'
 #define LEX_LEFTHESIS	'('
-#define LEX_RIGHTHESIS	'('
+#define LEX_RIGHTHESIS	')'
 #define LEX_RECT_LEFTBRACE	'['
 #define LEX_RECT_RIGHTBRACE	']'
 #define LEX_COMMA	','

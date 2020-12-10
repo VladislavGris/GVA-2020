@@ -150,6 +150,7 @@
     <ClCompile Include="LT.cpp" />
     <ClCompile Include="MFST.cpp" />
     <ClCompile Include="Parm.cpp" />
+    <ClCompile Include="PolishNotation.cpp" />
     <ClCompile Include="Semantic.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +166,7 @@
     <ClInclude Include="LT.h" />
     <ClInclude Include="MFST.h" />
     <ClInclude Include="Parm.h" />
+    <ClInclude Include="PolishNotation.h" />
     <ClInclude Include="Semantic.h" />
   </ItemGroup>
   <ItemGroup>

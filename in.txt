@@ -35,7 +35,7 @@ symbol c <- 'c'
 symbol d
 number y[2]
 symbol hello[6] <- "Привет"
-symbol Hello[6] <- "выходные данные"
+symbol Hello[6] <- "привет"
 number len <- strlen(hello)
 number prio <- compare(hello, Hello)
 b <- 71o
@@ -51,15 +51,11 @@ b <- e
 
 if[a = 5] then
 {
-print("a = 5")
-}
-else if[a = 4] then
-{
-print("a = 4")
+print("a равно 5")
 }
 else
 {
-print("a не 5 и не 4")
+print("a не равно 5")
 }
 if[a # 3] then
 {

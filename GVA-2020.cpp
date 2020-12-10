@@ -41,7 +41,10 @@ int _tmain(int argc, _TCHAR* argv[])
 #endif
 		Log::WriteInfo(log, "---- Семантический анализ ----\nНачало работы семантического анализатора");
 		Semantic::CheckSemantic(log, lex.lextable, lex.idtable, mfst);
+		PN::ConvertToPolish(lex.idtable, lex.lextable, mfst);
+		LT::PrintToFile(lex.lextable);
 		Log::Close(log);
+		std::cout << "Выполнено без ошибок" << std::endl;
 	}
 	catch (Error::ERROR e)
 	{

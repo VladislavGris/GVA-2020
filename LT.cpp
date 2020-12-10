@@ -37,6 +37,10 @@ namespace LT
 		}
 		lextable.size--;
 	}
+	/*void Clear(LexTable& lextable)
+	{
+		for(int i = 0)
+	}*/
 	void Delete(LexTable& lextable)
 	{
 		delete &lextable;

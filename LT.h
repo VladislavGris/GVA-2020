@@ -29,4 +29,5 @@ namespace LT
 	void RemoveEntry(LexTable& lextable, int position);
 	void Delete(LexTable& lextable);
 	void PrintToFile(LexTable& lextable);
+	void Clear(LexTable& lextable);
 }

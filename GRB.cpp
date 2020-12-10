@@ -57,8 +57,8 @@ namespace GRB
             Rule::Chain(3, TS('i'), TS(','), NS('W'))
         ),
         Rule(NS('V'), GRB_ERROR_SERIES + 5, // Ошибка в конструкции условного оператора
-            3,
-            Rule::Chain(12, TS('c'), TS('a'), TS('['), NS('E'), TS('o'), NS('E'), TS(']'), TS('h'), TS('{'), NS('N'), TS('}'), NS('V')),  // else if[...]then{...}
+            2,
+            //Rule::Chain(12, TS('c'), TS('a'), TS('['), NS('E'), TS('o'), NS('E'), TS(']'), TS('h'), TS('{'), NS('N'), TS('}'), NS('V')),  // else if[...]then{...}
             Rule::Chain(4, TS('c'), TS('{'), NS('N'), TS('}')),             //else{...}
             Rule::Chain(5, TS('c'), TS('{'), NS('N'), TS('}'), NS('N'))
         )
