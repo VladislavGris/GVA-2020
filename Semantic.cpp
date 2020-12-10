@@ -3,14 +3,12 @@ namespace Semantic
 {
 	void CheckSemantic(Log::LOG log, LT::LexTable& lextable, IT::IdTable& idtable, MFST::Mfst mfst)
 	{
-		bool isMain;
 		int functionReturnType, parameterCount = 0, funcProtoParameters = 0, errorCount = 0;
 		MFST::MfstState state, tempState;
 		GRB::Rule rule;
 		Error::ERROR e;
 		for (int i = 0; i < mfst.storestate.size(); i++)
 		{
-			//std::cout << i << std::endl;
 			state = MFST::Get_Container(mfst.storestate, i);
 			rule = mfst.grebach.getRule(state.nrule);
 			switch (mfst.deducation.nrules[i])
@@ -23,7 +21,6 @@ namespace Semantic
 					functionReturnType = idtable.table[lextable.table[state.lenta_position + 2].idxTI].iddatatype;
 					break;
 				case 1:	// mbNrEe
-					isMain = true;
 					functionReturnType = IT::IDDATATYPE::NUM;
 					break;
 				}
@@ -179,45 +176,86 @@ namespace Semantic
 				switch (mfst.deducation.nrulechains[i])
 				{
 				case 1: case 2:
+					IT::IDDATATYPE *param = (IT::IDDATATYPE*)malloc(sizeof(IT::IDDATATYPE));
+					bool* isArr = (bool*)malloc(sizeof(IT::IDDATATYPE));
 					while (MFST::Get_Container(mfst.storestate, i - parameterCount).nrule == PARAMETERS)	// вычисление количества переданнх в функцию параметров
 					{
 						parameterCount++;
 					}
-					for (int j = 0; j < i - parameterCount; j++)
+					if (IT::IsLibFunc(idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount).lenta_position].idxTI].id))
 					{
-						if (MFST::Get_Container(mfst.storestate, j).nrule == START_SYMBOL && MFST::Get_Container(mfst.storestate, j).nrulechain == START_SYMBOL)	// Если встречаем правило для стартового символа грамматики
+						switch (IT::IsLibFunc(idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount).lenta_position].idxTI].id))
 						{
-							if (!strcmp(idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, j).lenta_position + 2].idxTI].id, idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount).lenta_position].idxTI].id))
+						case 1:
+							funcProtoParameters = 1;
+							param[0] = IT::SYM;
+							isArr[0] = true;
+							//IT::IDDATATYPE param[] = { IT::SYM };
+							//bool isArr[] = { true };
+							break;
+						case 2:
+							funcProtoParameters = 2;
+							param[0] = IT::SYM; param[1] = IT::SYM;
+							isArr[0] = true; isArr[1] = true;
+							//IT::IDDATATYPE param[] = { IT::SYM, IT::SYM };
+							//bool isArr[] = { true, true };
+							break;
+						}
+						if (funcProtoParameters != parameterCount)
+						{
+							e = ERROR_THROW_IN(411, lextable.table[state.lenta_position].sn, 0);
+							Log::WriteError(log, e);
+							errorCount++;
+							continue;
+						}
+						for (int h = 0; h < funcProtoParameters; h++)
+						{
+							if (param[h] != idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - h).lenta_position].idxTI].iddatatype)
 							{
-								while (MFST::Get_Container(mfst.storestate, j + 1 + funcProtoParameters).nrule == FUNC_PARAMS)
+								e = ERROR_THROW_IN(412, lextable.table[state.lenta_position].sn, 0);
+								Log::WriteError(log, e);
+								errorCount++;
+							}
+						}
+					}
+					else
+					{
+						for (int j = 0; j < i - parameterCount; j++)
+						{
+							if (MFST::Get_Container(mfst.storestate, j).nrule == START_SYMBOL && MFST::Get_Container(mfst.storestate, j).nrulechain == START_SYMBOL)	// Если встречаем правило для стартового символа грамматики
+							{
+								if (!strcmp(idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, j).lenta_position + 2].idxTI].id, idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount).lenta_position].idxTI].id))
 								{
-									funcProtoParameters++;
-								}
-								if (parameterCount != funcProtoParameters)	// в последствии добавить break
-								{
-									e = ERROR_THROW_IN(411, lextable.table[state.lenta_position].sn, 0);
-									Log::WriteError(log, e);
-									errorCount++;
-								}
-								for (int h = funcProtoParameters; h > 0; h--)
-								{
-									if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, j + h).lenta_position + 1].idxTI].iddatatype != idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount + h).lenta_position].idxTI].iddatatype)
+									while (MFST::Get_Container(mfst.storestate, j + 1 + funcProtoParameters).nrule == FUNC_PARAMS)
 									{
-										e = ERROR_THROW_IN(412, lextable.table[state.lenta_position].sn, 0);
+										funcProtoParameters++;
+									}
+									if (parameterCount != funcProtoParameters)	// в последствии добавить continue
+									{
+										e = ERROR_THROW_IN(411, lextable.table[state.lenta_position].sn, 0);
 										Log::WriteError(log, e);
 										errorCount++;
 									}
-									if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, j + h).lenta_position + 1].idxTI].isArray && !idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount + h).lenta_position].idxTI].isArray)
+									for (int h = funcProtoParameters; h > 0; h--)
 									{
-										e = ERROR_THROW_IN(414, lextable.table[state.lenta_position].sn, 0);
-										Log::WriteError(log, e);
-										errorCount++;
-									}
-									if (!idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, j + h).lenta_position + 1].idxTI].isArray && idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount + h).lenta_position].idxTI].isArray)
-									{
-										e = ERROR_THROW_IN(413, lextable.table[state.lenta_position].sn, 0);
-										Log::WriteError(log, e);
-										errorCount++;
+										if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, j + h).lenta_position + 1].idxTI].iddatatype != idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount + h).lenta_position].idxTI].iddatatype)
+										{
+											e = ERROR_THROW_IN(412, lextable.table[state.lenta_position].sn, 0);
+											Log::WriteError(log, e);
+											errorCount++;
+										}
+										if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, j + h).lenta_position + 1].idxTI].isArray && !idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount + h).lenta_position].idxTI].isArray)
+										{
+											e = ERROR_THROW_IN(414, lextable.table[state.lenta_position].sn, 0);
+											Log::WriteError(log, e);
+											errorCount++;
+										}
+										if (!idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, j + h).lenta_position + 1].idxTI].isArray && idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i - parameterCount + h).lenta_position].idxTI].isArray)
+										{
+											e = ERROR_THROW_IN(413, lextable.table[state.lenta_position].sn, 0);
+											Log::WriteError(log, e);
+											errorCount++;
+										}
 									}
 								}
 							}

@@ -6,9 +6,8 @@
 #include "FST.h"
 #include <iostream>
 #include <cstring>
-#define BUF_SIZE 100
 #define END_OF_INSTRUCTION	'\n'
-#define FST_ARRAY_SIZE		21
+#define FST_ARRAY_SIZE		22
 #define START_OF_LITERAL	'l'
 #define START_OF_SUBAREA	'{'
 #define END_OF_SUBAREA		'}'
@@ -16,7 +15,6 @@
 #define END_OF_PARAMETERS	')'
 #define COMMENTARY			';'
 #define START_OF_INDEX		'['
-#define FUNCTION_AREA		0
 namespace Lex
 {
 	struct LEX
@@ -28,4 +26,5 @@ namespace Lex
 	bool IsSeparator(char symbol);		// Символ является разделителем
 	bool IsLexSeparator(char symbol);	// Символ является разделителем, который должен быть выведен в табилцу лексем
 	bool IsLiteralSeparator(char symbol);
+	
 }

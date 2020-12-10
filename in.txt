@@ -9,32 +9,36 @@ else
 return b
 }
 end
+
 number function Rand(number a[])
 begin
 print(a)
 end
+
 number function Equality(number a, number b); Функция определяет, равны ли 2 числа
 begin
 if[a = b] then
 {
-return 10x1; Возвращает 1, если числа равны
+return 1; Возвращает 1, если числа равны
 }
 else
 {
-return 10x0; Возвращает 0, если числа не равны
+return 0; Возвращает 0, если числа не равны
 }
 end
 
 main
 begin
-number a <- 2x101 
-number b <- 10x13
+number a <- 101b 
+number b <- 13
 symbol c <- 'c'
-symbol d <- 1
+symbol d
 number y[2]
 symbol hello[6] <- "Привет"
 symbol Hello[6] <- "выходные данные"
-b <- 8x71
+number len <- strlen(hello)
+number prio <- compare(hello, Hello)
+b <- 71o
 d <- 'd'
 number g <- Comparsion(a, b)
 Rand(y)
@@ -45,11 +49,11 @@ a <- b
 b <- e
 }
 
-if[a = 10x5] then
+if[a = 5] then
 {
 print("a = 5")
 }
-else if[a = 10x4] then
+else if[a = 4] then
 {
 print("a = 4")
 }
@@ -57,7 +61,7 @@ else
 {
 print("a не 5 и не 4")
 }
-if[a # 10x3] then
+if[a # 3] then
 {
 print("a не равно 3")
 }

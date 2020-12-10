@@ -5,6 +5,7 @@
 #include "GRB.h"
 #include "Lex.h"
 //#define MFSTT
+#define TREE
 #define MFST_DIAGN_MAXSIZE 2*ERROR_MAXSIZE_MESSAGE
 #define MFST_DIAGN_NUMBER 3
 typedef std::stack<short>   MFSTSTACK;

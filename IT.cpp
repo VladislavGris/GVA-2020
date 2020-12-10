@@ -18,16 +18,37 @@ namespace IT
 		idtable.table[idtable.size] = entry;
 		idtable.size++;
 	}
-	Entry FillEntry(int lexTableSize, char* id, IDDATATYPE datatype, IDTYPE type, int areaofvisibiliti)
+	Entry FillEntry(int lexTableSize, char* id, IDDATATYPE datatype, IDTYPE type, char* value, int areaofvisibiliti)
 	{
 		Entry entry;
+		bool isNegative = false;
 		entry.idxfirstLE = lexTableSize;
 		strcpy_s(entry.id, id);
-		entry.iddatatype = datatype;
-		entry.idtype = type;
-		entry.areaOfVisibility = areaofvisibiliti;
+		if (IsLibFunc(id))
+		{
+			entry.idtype = S;
+			entry.areaOfVisibility = FUNCTION_AREA;
+			switch (IsLibFunc(id))
+			{
+			case 1:			// strlen
+				entry.iddatatype = NUM;
+				break;
+			case 2:			// compare
+				entry.iddatatype = NUM;
+				break;
+			}
+		}
+		else
+		{
+			entry.iddatatype = datatype;
+			entry.idtype = type;
+			entry.areaOfVisibility = areaofvisibiliti;
+		}
 		if (type == IDTYPE::L)
 		{
+			if (value[0] == '-')
+				isNegative = true;
+
 			entry.declaration = true;
 			entry.assignment = true;
 		}
@@ -84,6 +105,9 @@ namespace IT
 			case L:
 				std::cout << std::setw(10) << "LITERAL|";
 				break;
+			case S:
+				std::cout << std::setw(11) << "LIBRARY|";
+				break;
 			}
 			std::cout << std::setw(5) << idtable.table[i].idxfirstLE << std::endl;
 		}
@@ -126,6 +150,9 @@ namespace IT
 			case L:
 				fout << std::setw(11) << "LITERAL|";
 				break;
+			case S:
+				fout << std::setw(11) << "LIBRARY|";
+				break;
 			}
 			fout << std::setw(5) << idtable.table[i].idxfirstLE <<'|'/*<< std::endl*/;
 			if (idtable.table[i].isArray)
@@ -134,5 +161,15 @@ namespace IT
 				fout << std::endl;
 		}
 		fout.close();
+	}
+	int IsLibFunc(char* id)
+	{
+		const char* libFuncs[LIB_FUNC_COUNT] = { LIB_FUNC_1, LIB_FUNC_2 };
+		for (int i = 0; i < LIB_FUNC_COUNT; i++)
+		{
+			if (!strcmp(id, libFuncs[i]))
+				return i + 1;
+		}
+		return 0;
 	}
 }

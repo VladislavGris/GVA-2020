@@ -11,6 +11,10 @@
 #define FUNCTION			2
 #define PARAMETER			3
 #define LITERAL				4
+#define LIB_FUNC_COUNT		2
+#define LIB_FUNC_1			"strle"
+#define LIB_FUNC_2			"compa"
+#define FUNCTION_AREA		0
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -20,7 +24,7 @@ namespace IT
 		NUM = 1, SYM = 2
 	};
 	enum IDTYPE {
-		V = 1, F = 2, P = 3, L = 4
+		S = 0, V = 1, F = 2, P = 3, L = 4, M = 5
 	};
 	enum NOTATION {
 		D = 10, O = 8, B = 2
@@ -50,11 +54,12 @@ namespace IT
 		Entry* table;			// массив строк таблицы идентификаторов
 	};
 	IdTable Create(int size);	// создать таблицу идентификаторов
-	Entry FillEntry(int lexTableSize, char* id, IDDATATYPE datatype, IDTYPE type, int areaofvisibiliti);
+	Entry FillEntry(int lexTableSize, char* id, IDDATATYPE datatype, IDTYPE type, char* value, int areaofvisibiliti);
 	void Add(IdTable& idtable, Entry entry);	// добавить строку в таблицу идентификаторов
 	Entry GetEntry(IdTable& idtable, int n);	// получить строку таблицы идентификаторов
 	int IsId(IdTable& idtable, char id[ID_MAXSIZE], int areaofvisibility);	// возврат: номер строки (если есть), TI_NULLIDX (если нет)
 	void PrintIDTable(IdTable& idtable);
 	void Delete(IdTable& idtable);				// удалить таблицу лексем (освободить память)
 	void PrintToFile(IdTable& idtable);
+	int IsLibFunc(char* id);
 }

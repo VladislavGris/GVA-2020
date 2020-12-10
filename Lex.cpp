@@ -4,18 +4,18 @@ namespace Lex
 	bool ParseAChain(In::IN in, LT::LexTable& lextable, IT::IdTable& idtable, Log::LOG log)
 	{
 		int lexemeSize = 0, strCount = 1, position = 0, idxTI = LT_TI_NULLIDX, areaOfVisibility = 0, baseArea = 0, literalCount = 1;
-		char* lexeme = new char[BUF_SIZE], symbol, operation[OPERATOR_FIXSIZE], empty[2] = "", id[ID_MAXSIZE], lexNumBuf[ID_MAXSIZE - 1];
+		char* lexeme = new char[TI_STR_MAXSIZE], symbol, operation[OPERATOR_FIXSIZE], empty[2] = "", id[ID_MAXSIZE], lexNumBuf[ID_MAXSIZE - 1];
 		char token, lastToken = '0';
 		const char lexArray[FST_ARRAY_SIZE] = { LEX_NUMBER, LEX_FUNCTION, LEX_SYMBOL, LEX_BEGIN, LEX_IF, LEX_THEN, LEX_RETURN,
 												LEX_ELSE, LEX_END, LEX_MAIN, LEX_PRINT,LEX_LESSER, LEX_ASIGNMENT, LEX_GE,
-												LEX_GREATER, LEX_EQUAL, LEX_NOT_EQUAL, LEX_ID, LEX_LITERAL, LEX_LITERAL,LEX_LITERAL };
+												LEX_GREATER, LEX_EQUAL, LEX_NOT_EQUAL, LEX_ID, LEX_LITERAL,LEX_LITERAL, LEX_LITERAL, LEX_LITERAL};
 		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false, wasError = false, isCommentary = false, arrayLiteral = false;
 		IT::IDDATATYPE datatype;
 		IT::IDTYPE type;
 		LT::Entry tempEntry;
 		IT::Entry ITTempEntry;
 		Error::ERROR e;
-		memset(lexeme, 0, BUF_SIZE);
+		memset(lexeme, 0, TI_STR_MAXSIZE);
 		for (int i = 0; i <= in.size; i++)
 		{
 			symbol = in.text[i];
@@ -237,22 +237,22 @@ namespace Lex
 									FST::RELATION('Y',1),FST::RELATION('Z',1)),
 						FST::NODE()
 					},
-					// 18 10x(1|2|3|4|5|6|7|8|9|0)*
-					{
-						lexeme,
-						5,
-						FST::NODE(1, FST::RELATION('1',1)),
-						FST::NODE(1, FST::RELATION('0',2)),
-						FST::NODE(1, FST::RELATION('x',3)),
-						FST::NODE(20, FST::RELATION('1',4), FST::RELATION('2',4), FST::RELATION('3',4), FST::RELATION('4',4),
-									FST::RELATION('5',4), FST::RELATION('6',4), FST::RELATION('7',4), FST::RELATION('8',4),
-									FST::RELATION('9',4),FST::RELATION('0',4),
-									FST::RELATION('1',3), FST::RELATION('2',3), FST::RELATION('3',3), FST::RELATION('4',3),
-									FST::RELATION('5',3), FST::RELATION('6',3), FST::RELATION('7',3), FST::RELATION('8',3),
-									FST::RELATION('9',3),FST::RELATION('0',3)),
-						FST::NODE()
-					},
-					// 19 (1|2|3|4|5|6|7|8|9|0)*
+					//// 18 10x(1|2|3|4|5|6|7|8|9|0)*
+					//{
+					//	lexeme,
+					//	5,
+					//	FST::NODE(1, FST::RELATION('1',1)),
+					//	FST::NODE(1, FST::RELATION('0',2)),
+					//	FST::NODE(1, FST::RELATION('x',3)),
+					//	FST::NODE(20, FST::RELATION('1',4), FST::RELATION('2',4), FST::RELATION('3',4), FST::RELATION('4',4),
+					//				FST::RELATION('5',4), FST::RELATION('6',4), FST::RELATION('7',4), FST::RELATION('8',4),
+					//				FST::RELATION('9',4),FST::RELATION('0',4),
+					//				FST::RELATION('1',3), FST::RELATION('2',3), FST::RELATION('3',3), FST::RELATION('4',3),
+					//				FST::RELATION('5',3), FST::RELATION('6',3), FST::RELATION('7',3), FST::RELATION('8',3),
+					//				FST::RELATION('9',3),FST::RELATION('0',3)),
+					//	FST::NODE()
+					//},
+					// 18 (1|2|3|4|5|6|7|8|9|0)*
 					{
 						lexeme,
 						2,
@@ -264,18 +264,44 @@ namespace Lex
 									FST::RELATION('9',1),FST::RELATION('0',1)),
 						FST::NODE()
 					},
+					// 19
+					{
+						lexeme,
+						3,
+						FST::NODE(1, FST::RELATION('-', 1)),
+						FST::NODE(20, FST::RELATION('1',1), FST::RELATION('2',1), FST::RELATION('3',1), FST::RELATION('4',1),
+									FST::RELATION('5',1), FST::RELATION('6',1), FST::RELATION('7',1), FST::RELATION('8',1),
+									FST::RELATION('9',1),FST::RELATION('0',1),
+									FST::RELATION('1',2), FST::RELATION('2',2), FST::RELATION('3',2), FST::RELATION('4',2),
+									FST::RELATION('5',2), FST::RELATION('6',2), FST::RELATION('7',2), FST::RELATION('8',2),
+									FST::RELATION('9',2),FST::RELATION('0',2)),
+						FST::NODE()
+					},
 					// 20 8x(1|2|3|4|5|6|7|8|9|0)* | 2x(1|2|3|4|5|6|7|8|9|0)*
 					{
 						lexeme,
+						3,
+						FST::NODE(20, FST::RELATION('1',0), FST::RELATION('2',0), FST::RELATION('3',0), FST::RELATION('3',0),
+									FST::RELATION('5',0), FST::RELATION('6',0), FST::RELATION('7',0), FST::RELATION('8',0),
+									FST::RELATION('9',0),FST::RELATION('0',0),
+									FST::RELATION('1',1), FST::RELATION('2',1), FST::RELATION('2',1), FST::RELATION('4',1),
+									FST::RELATION('5',1), FST::RELATION('6',1), FST::RELATION('7',1), FST::RELATION('8',1),
+									FST::RELATION('9',1),FST::RELATION('0',1)),
+						FST::NODE(2, FST::RELATION('b', 2), FST::RELATION('o', 2)),
+						FST::NODE()
+					},
+					// 21
+					{
+						lexeme,
 						4,
-						FST::NODE(2, FST::RELATION('8',1), FST::RELATION('2', 1)),
-						FST::NODE(1, FST::RELATION('x',2)),
-						FST::NODE(20, FST::RELATION('1',3), FST::RELATION('2',3), FST::RELATION('3',3), FST::RELATION('3',3),
-									FST::RELATION('5',3), FST::RELATION('6',3), FST::RELATION('7',3), FST::RELATION('8',3),
-									FST::RELATION('9',3),FST::RELATION('0',3),
-									FST::RELATION('1',2), FST::RELATION('2',2), FST::RELATION('2',2), FST::RELATION('4',2),
+						FST::NODE(1, FST::RELATION('-', 1)),
+						FST::NODE(20, FST::RELATION('1',1), FST::RELATION('2',1), FST::RELATION('3',1), FST::RELATION('4',1),
+									FST::RELATION('5',1), FST::RELATION('6',1), FST::RELATION('7',1), FST::RELATION('8',1),
+									FST::RELATION('9',1),FST::RELATION('0',1),
+									FST::RELATION('1',2), FST::RELATION('2',2), FST::RELATION('3',2), FST::RELATION('4',2),
 									FST::RELATION('5',2), FST::RELATION('6',2), FST::RELATION('7',2), FST::RELATION('8',2),
 									FST::RELATION('9',2),FST::RELATION('0',2)),
+						FST::NODE(2, FST::RELATION('b', 3), FST::RELATION('o', 3)),
 						FST::NODE()
 					}
 				};
@@ -304,7 +330,7 @@ namespace Lex
 							case 2:						// symbol
 								datatype = IT::SYM;
 								break;
-							case 18: case 19: case 20:			// 10x... || 8x... || 2x... || ...
+							case 18: case 19: case 20: case 21:			// 10x... || 8x... || 2x... || ...
 								type = IT::L;
 								datatype = IT::NUM;
 								break;
@@ -353,12 +379,12 @@ namespace Lex
 						if (type == IT::F && idxTI == TI_NULLIDX)
 						{
 							idxTI = IT::IsId(idtable, id, FUNCTION_AREA);
-							if (areaOfVisibility != FUNCTION_AREA && idxTI == TI_NULLIDX)
+							if (areaOfVisibility != FUNCTION_AREA && idxTI == TI_NULLIDX && !IT::IsLibFunc(id))
 								throw ERROR_THROW_IN(203, strCount, position);	// Функция не объявлена
 						}
 						if (idxTI == TI_NULLIDX)
 						{
-							ITTempEntry = IT::FillEntry(lextable.size, id, datatype, type, areaOfVisibility);
+							ITTempEntry = IT::FillEntry(lextable.size, id, datatype, type, lexeme, areaOfVisibility);
 							idxTI = idtable.size;
 							if (symbol == START_OF_INDEX || arrayLiteral)
 							{
@@ -401,7 +427,7 @@ namespace Lex
 					strCount++;
 					position = 0;
 				}
-				memset(lexeme, 0, BUF_SIZE);
+				memset(lexeme, 0, TI_STR_MAXSIZE);
 				lexemeSize = 0;
 				wasChanged = false;
 				wasSeparator = true;
@@ -444,4 +470,5 @@ namespace Lex
 			return true;
 		return false;
 	}
+	
 }
