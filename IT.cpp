@@ -21,6 +21,8 @@ namespace IT
 	Entry FillEntry(int lexTableSize, char* id, IDDATATYPE datatype, IDTYPE type, char* value, int areaofvisibiliti)
 	{
 		Entry entry;
+		char* temp = (char*)malloc(sizeof(char));
+		memset(temp, 0, strlen(temp));
 		bool isNegative = false;
 		entry.idxfirstLE = lexTableSize;
 		strcpy_s(entry.id, id);
@@ -46,14 +48,58 @@ namespace IT
 		}
 		if (type == IDTYPE::L)
 		{
-			if (value[0] == '-')
-				isNegative = true;
-
+			switch (entry.iddatatype)
+			{
+			case NUM:
+				if (value[0] == '-')
+					for (int i = 1; i < strlen(value) - 1; i++)
+						temp[i - 1] = value[i];
+				else
+					for (int i = 0; i < strlen(value) - 1; i++)
+						temp[i] = value[i];
+				switch (value[strlen(value) - 1])
+				{
+				case 'b':
+					entry.value.num.notation = B;
+					if(value[0] == '-')
+						entry.value.num.value = -BinaryToDecimal(temp);
+					else
+						entry.value.num.value = BinaryToDecimal(temp);
+					break;
+				case 'o':
+					entry.value.num.notation = O;
+					if (value[0] == '-')
+						entry.value.num.value = -OctalToDecimal(temp);
+					else
+						entry.value.num.value = OctalToDecimal(temp);
+					break;
+				default:
+					entry.value.num.notation = D;
+					entry.value.num.value = atoi(value);
+					break;
+				}
+				break;
+			case SYM:
+				entry.value.vstr.len = strlen(value);
+				strcpy_s(entry.value.vstr.str, value);
+				break;
+			}
 			entry.declaration = true;
 			entry.assignment = true;
 		}
 		else
 		{
+			switch (entry.iddatatype)
+			{
+			case NUM:
+				entry.value.num.value = 0;
+				entry.value.num.notation = D;
+				break;
+			case SYM:
+				entry.value.vstr.len = 0;
+				entry.value.vstr.str[0] = '\0';
+				break;
+			}
 			entry.declaration = false;
 			entry.assignment = false;
 		}
@@ -131,10 +177,10 @@ namespace IT
 			switch (idtable.table[i].iddatatype)
 			{
 			case NUM:
-				fout << std::setw(11) << "NUMBER|";
+				fout << std::setw(11) << "NUMBER|"<<idtable.table[i].value.num.value<<"|";
 				break;
 			case SYM:
-				fout << std::setw(11) << "SYMBOL|";
+				fout << std::setw(11) << "SYMBOL|"<<idtable.table[i].value.vstr.str<<"|";
 			}
 			switch (idtable.table[i].idtype)
 			{
@@ -171,5 +217,23 @@ namespace IT
 				return i + 1;
 		}
 		return 0;
+	}
+	int BinaryToDecimal(char* num)
+	{
+		int n = 0;
+		for (int i = strlen(num) - 1; i >= 0; i--)
+		{
+			n += (num[strlen(num) - 1 - i] - '0') * pow(2, i);
+		}
+		return n;
+	}
+	int OctalToDecimal(char* num)
+	{
+		int n = 0;
+		for (int i = strlen(num) - 1; i >= 0; i--)
+		{
+			n += (num[strlen(num) - 1 - i] - '0') * pow(8, i);
+		}
+		return n;
 	}
 }

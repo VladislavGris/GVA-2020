@@ -1,4 +1,4 @@
-number function Comparsion(number a, number b)	; Функция сравнивает 2 числа и возвращает наибольшее
+number function Comparsion(number a, number b)		; Функция сравнивает 2 числа и возвращает наибольшее
 begin
 if[a > b] then
 {
@@ -15,21 +15,21 @@ begin
 print(a)
 end
 
-number function Equality(number a, number b); Функция определяет, равны ли 2 числа
+number function Equality(number a, number b)		; Функция определяет, равны ли 2 числа
 begin
 if[a = b] then
 {
-return 1; Возвращает 1, если числа равны
+return 1						; Возвращает 1, если числа равны
 }
 else
 {
-return 0; Возвращает 0, если числа не равны
+return 0						; Возвращает 0, если числа не равны
 }
 end
 
 main
 begin
-number a <- 101b 
+number a <- 1011b
 number b <- 13
 symbol c <- 'c'
 symbol d

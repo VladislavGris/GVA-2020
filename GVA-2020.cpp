@@ -25,6 +25,7 @@ int _tmain(int argc, _TCHAR* argv[])
 #endif
 		LT::PrintToFile(lex.lextable);
 		IT::PrintToFile(lex.idtable);
+
 #ifdef MFSTT
 		MFST_TRACE_START
 #endif

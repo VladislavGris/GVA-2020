@@ -44,7 +44,12 @@ namespace IT
 				int value;
 				NOTATION notation;
 			} num;
-			char str[TI_STR_MAXSIZE];
+			struct
+			{
+				int len;
+				char str[TI_STR_MAXSIZE];
+			} vstr;
+			
 		} value;	// значение идентификатора
 	};
 	struct IdTable				// экземпл€р таблицы идентификаторов
@@ -62,4 +67,6 @@ namespace IT
 	void Delete(IdTable& idtable);				// удалить таблицу лексем (освободить пам€ть)
 	void PrintToFile(IdTable& idtable);
 	int IsLibFunc(char* id);
+	int BinaryToDecimal(char* num);
+	int OctalToDecimal(char* num);
 }
