@@ -8,7 +8,7 @@ namespace Lex
 		char token, lastToken = '0';
 		const char lexArray[FST_ARRAY_SIZE] = { LEX_NUMBER, LEX_FUNCTION, LEX_SYMBOL, LEX_BEGIN, LEX_IF, LEX_THEN, LEX_RETURN,
 												LEX_ELSE, LEX_END, LEX_MAIN, LEX_PRINT,LEX_LESSER, LEX_ASIGNMENT, LEX_GE,
-												LEX_GREATER, LEX_EQUAL, LEX_NOT_EQUAL, LEX_ID, LEX_LITERAL,LEX_LITERAL, LEX_LITERAL, LEX_LITERAL};
+												LEX_GREATER, LEX_EQUAL, LEX_NOT_EQUAL, LEX_ID, LEX_LITERAL,LEX_LITERAL, LEX_LITERAL, LEX_LITERAL/*, LEX_LITERAL*/};
 		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false, wasError = false, isCommentary = false, arrayLiteral = false;
 		IT::IDDATATYPE datatype;
 		IT::IDTYPE type;
@@ -237,21 +237,6 @@ namespace Lex
 									FST::RELATION('Y',1),FST::RELATION('Z',1)),
 						FST::NODE()
 					},
-					//// 18 10x(1|2|3|4|5|6|7|8|9|0)*
-					//{
-					//	lexeme,
-					//	5,
-					//	FST::NODE(1, FST::RELATION('1',1)),
-					//	FST::NODE(1, FST::RELATION('0',2)),
-					//	FST::NODE(1, FST::RELATION('x',3)),
-					//	FST::NODE(20, FST::RELATION('1',4), FST::RELATION('2',4), FST::RELATION('3',4), FST::RELATION('4',4),
-					//				FST::RELATION('5',4), FST::RELATION('6',4), FST::RELATION('7',4), FST::RELATION('8',4),
-					//				FST::RELATION('9',4),FST::RELATION('0',4),
-					//				FST::RELATION('1',3), FST::RELATION('2',3), FST::RELATION('3',3), FST::RELATION('4',3),
-					//				FST::RELATION('5',3), FST::RELATION('6',3), FST::RELATION('7',3), FST::RELATION('8',3),
-					//				FST::RELATION('9',3),FST::RELATION('0',3)),
-					//	FST::NODE()
-					//},
 					// 18 (1|2|3|4|5|6|7|8|9|0)*
 					{
 						lexeme,
@@ -303,7 +288,20 @@ namespace Lex
 									FST::RELATION('9',2),FST::RELATION('0',2)),
 						FST::NODE(2, FST::RELATION('b', 3), FST::RELATION('o', 3)),
 						FST::NODE()
-					}
+					},
+					//// 22
+					//{
+					//	lexeme,
+					//	3,
+					//	FST::NODE(20, FST::RELATION('1',1), FST::RELATION('2',1), FST::RELATION('3',1), FST::RELATION('4',1),
+					//	FST::RELATION('5',1), FST::RELATION('6',1), FST::RELATION('7',1), FST::RELATION('8',1),
+					//	FST::RELATION('9',1),FST::RELATION('0',1),
+					//	FST::RELATION('1', 2), FST::RELATION('2', 2), FST::RELATION('3', 2), FST::RELATION('4', 2),
+					//	FST::RELATION('5', 2),FST::RELATION('6', 2),FST::RELATION('7', 2),FST::RELATION('8', 2),
+					//	FST::RELATION('9', 2),FST::RELATION('0', 2)),
+					//	FST::NODE(1, FST::RELATION('|', 0)),
+					//	FST::NODE()
+					//}
 				};
 				// wasChanged может быть установлен в true, если были считаны символ или символьная строка
 				if (!wasChanged)
@@ -334,6 +332,11 @@ namespace Lex
 								type = IT::L;
 								datatype = IT::NUM;
 								break;
+							/*case 22:
+								type = IT::L;
+								datatype = IT::NUM;
+								arrayLiteral = true;
+								break;*/
 							}
 							token = lexArray[i];
 							wasChanged = true;

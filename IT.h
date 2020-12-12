@@ -49,7 +49,11 @@ namespace IT
 				int len;
 				char str[TI_STR_MAXSIZE];
 			} vstr;
-			
+			/*struct
+			{
+				int len;
+				int arr[TI_STR_MAXSIZE];
+			} anum;*/
 		} value;	// значение идентификатора
 	};
 	struct IdTable				// экземпляр таблицы идентификаторов

@@ -8,6 +8,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	lex.lextable = LT::Create(LT_MAXSIZE);
 	lex.idtable = IT::Create(TI_MAXSIZE);
 	Log::LOG log = Log::INITLOG;
+	std::ofstream* asmStream = new std::ofstream();
+	asmStream->open(ASM_FILE_PATH);
+	if (!asmStream->is_open())
+		throw ERROR_THROW(113);
 	try
 	{
 		Parm::PARM parm = Parm::getparm(argc, argv);
@@ -43,7 +47,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		Semantic::CheckSemantic(log, lex.lextable, lex.idtable, mfst);
 		PN::ConvertToPolish(lex.idtable, lex.lextable, mfst);
 		LT::PrintToFile(lex.lextable);
+
+		Gen::Generate(asmStream, lex.idtable, lex.lextable, mfst);
 		Log::Close(log);
+		asmStream->close();
 		std::cout << "Выполнено без ошибок" << std::endl;
 	}
 	catch (Error::ERROR e)

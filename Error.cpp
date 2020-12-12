@@ -19,7 +19,7 @@ namespace Error
 		ERROR_ENTRY(110, "Ошибка при открытии файла с исходным кодом (-in)"),
 		ERROR_ENTRY(111, "Недопустимый символ в исходном файле (-in)"),
 		ERROR_ENTRY(112, "Ошибка при создании файла протокола (-log)"),
-		ERROR_ENTRY_NODEF(113),ERROR_ENTRY_NODEF(114),ERROR_ENTRY_NODEF(115),ERROR_ENTRY_NODEF(116),ERROR_ENTRY_NODEF(117),ERROR_ENTRY_NODEF(118),ERROR_ENTRY_NODEF(119),
+		ERROR_ENTRY(113, "Ошибка при создании файла с расширением .asm"),ERROR_ENTRY_NODEF(114),ERROR_ENTRY_NODEF(115),ERROR_ENTRY_NODEF(116),ERROR_ENTRY_NODEF(117),ERROR_ENTRY_NODEF(118),ERROR_ENTRY_NODEF(119),
 		ERROR_ENTRY_NODEF10(120),ERROR_ENTRY_NODEF10(130),ERROR_ENTRY_NODEF10(140),ERROR_ENTRY_NODEF10(150),ERROR_ENTRY_NODEF10(160),ERROR_ENTRY_NODEF10(170),ERROR_ENTRY_NODEF10(180),ERROR_ENTRY_NODEF10(190),
 		ERROR_ENTRY(200, "Переполнение таблицы лексем"),ERROR_ENTRY(201, "Переполнение таблицы идентификаторов"), ERROR_ENTRY(202, "Неопределенная лексема"),ERROR_ENTRY(203, "Отсутствует объявление функции"),
 		ERROR_ENTRY(204, "Переменная с таким именем уже задана в текущей области видимости"),ERROR_ENTRY_NODEF(205),ERROR_ENTRY_NODEF(206),ERROR_ENTRY_NODEF(207),ERROR_ENTRY_NODEF(208),ERROR_ENTRY_NODEF(209),
