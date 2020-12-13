@@ -12,5 +12,5 @@ namespace Gen
 	void WriteHeader(std::ofstream* stream, IT::IdTable idtable, LT::LexTable lextable, MFST::Mfst mfst);
 	void WriteProto(std::ofstream* stream, IT::IdTable idtable, LT::LexTable lextable, MFST::Mfst mfst);
 	void ConstGeneration(std::ofstream* stream, IT::IdTable idtable);
-	void DataGeneration(std::ofstream* stream, IT::IdTable idtable);
+	void DataGeneration(std::ofstream* stream, IT::IdTable idtable, MFST::Mfst mfst);
 }

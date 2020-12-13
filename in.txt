@@ -29,7 +29,7 @@ number b <- 13
 symbol c <- 'c'
 symbol d
 symbol hello[6] <- "Привет"
-symbol Hello[6] <- "привет"
+symbol Hello[7] <- "привет"
 number len <- strlen(hello)
 number prio <- compare(hello, Hello)
 b <- 71o

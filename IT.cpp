@@ -177,10 +177,10 @@ namespace IT
 			switch (idtable.table[i].iddatatype)
 			{
 			case NUM:
-				fout << std::setw(11) << "NUMBER|"<<idtable.table[i].value.num.value<<"|";
+				fout << std::setw(11) << "NUMBER|"<<"|";
 				break;
 			case SYM:
-				fout << std::setw(11) << "SYMBOL|"<<idtable.table[i].value.vstr.str<<"|";
+				fout << std::setw(11) << "SYMBOL|"<<"|";
 			}
 			switch (idtable.table[i].idtype)
 			{

@@ -5,6 +5,7 @@ namespace Gen
 	{
 		WriteHeader(stream, idtable, lextable, mfst);
 		ConstGeneration(stream, idtable);
+		DataGeneration(stream, idtable, mfst);
 	}
 	void WriteHeader(std::ofstream* stream, IT::IdTable idtable, LT::LexTable lextable, MFST::Mfst mfst)
 	{
@@ -74,20 +75,34 @@ namespace Gen
 			}
 		}
 	}
-	void DataGeneration(std::ofstream* stream, IT::IdTable idtable)
+	void DataGeneration(std::ofstream* stream, IT::IdTable idtable, MFST::Mfst mfst)
 	{
+		(*stream) << ".data" << std::endl;
 		for (int i = 0; i < idtable.size; i++)				// Проход по всем строкам IT
 		{
 			if (idtable.table[i].idtype == IT::IDTYPE::V)	// Выборка переменных
 			{
 				(*stream) << idtable.table[i].id << idtable.table[i].areaOfVisibility << " ";	// Имя переменной
 				if (idtable.table[i].iddatatype == IT::IDDATATYPE::NUM)
-				{
 					(*stream) << "dword ?" << std::endl;
-				}
 				else
 				{
-
+					(*stream) << "byte ";
+					if (idtable.table[i].isArray)
+					{
+						/*MFST::MfstState state;
+						for (int i = 0; i < mfst.storestate.size(); i++)
+						{
+							state = MFST::Get_Container(mfst.storestate, i);
+							if (state.lenta_position == idtable.table[i].idxfirstLE - 1)
+							{
+								(*stream)<<idtable.table
+							}
+						}*/
+						(*stream) << idtable.table[i + 1].value.num.value << " dup (?)" << std::endl;
+					}
+					else
+						(*stream) << "?" << std::endl;
 				}
 			}
 		}
