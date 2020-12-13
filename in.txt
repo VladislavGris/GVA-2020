@@ -9,7 +9,6 @@ else
 return b
 }
 end
-
 number function Equality(number a, number b)		; Функция определяет, равны ли 2 числа
 begin
 if[a = b] then
@@ -30,6 +29,7 @@ symbol c <- 'c'
 symbol d
 symbol hello[6] <- "Привет"
 symbol Hello[7] <- "привет"
+symbol h <- hello[1]
 number len <- strlen(hello)
 number prio <- compare(hello, Hello)
 b <- 71o
@@ -41,7 +41,6 @@ number e <- a
 a <- b
 b <- e
 }
-
 if[a = 5] then
 {
 print("a равно 5")

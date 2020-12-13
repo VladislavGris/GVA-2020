@@ -1,5 +1,6 @@
 ﻿#include "framework.h"
 #include <cstring>
+#include <iostream>
 extern "C"
 {
 	int __stdcall strle(char* str)
@@ -15,5 +16,15 @@ extern "C"
 			return 1;
 		else
 			return 0;					// str1 = str2
+	}
+	int __stdcall cpr(char* str)
+	{
+		std::cout << str << std::endl;
+		return 0;
+	}
+	int __stdcall ipr(int a)
+	{
+		std::cout << a << std::endl;
+		return 0;
 	}
 }

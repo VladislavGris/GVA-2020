@@ -23,16 +23,16 @@ namespace GRB
             Rule::Chain(8, TS('t'), TS('i'), TS('['), NS('E'), TS(']'), TS('s'), NS('E'), NS('N')),
             Rule::Chain(3, TS('i'), TS('s'), NS('E')),          // Присвоение значения переменной, 89
             Rule::Chain(4, TS('i'), TS('s'), NS('E'), NS('N')),
-            Rule::Chain(6, TS('i'), TS('['), NS('E'), TS(']'), TS('s'), NS('E')),   // Присвоение значения элементу массива, 1011
+            Rule::Chain(6, TS('i'), TS('['), NS('E'), TS(']'), TS('s'), NS('E')),   // Присвоение значения элементу массива, 10 11
             Rule::Chain(7, TS('i'), TS('['), NS('E'), TS(']'), TS('s'), NS('E'), NS('N')),
-            Rule::Chain(4, TS('p'), TS('('), NS('E'), TS(')')),          // print(...), 1213
+            Rule::Chain(4, TS('p'), TS('('), NS('E'), TS(')')),          // print(...), 12 13
             Rule::Chain(5, TS('p'), TS('('), NS('E'), TS(')'), NS('N')),
-            Rule::Chain(10, TS('a'), TS('['), NS('E'), TS('o'), NS('E'), TS(']'), TS('h'), TS('{'), NS('N'), TS('}')),         // if[...]then{...}
+            Rule::Chain(10, TS('a'), TS('['), NS('E'), TS('o'), NS('E'), TS(']'), TS('h'), TS('{'), NS('N'), TS('}')),         // if[...]then{...} 14 15 16
             Rule::Chain(11, TS('a'), TS('['), NS('E'), TS('o'), NS('E'), TS(']'), TS('h'), TS('{'), NS('N'), TS('}'), NS('N')),
             Rule::Chain(11, TS('a'), TS('['), NS('E'), TS('o'), NS('E'), TS(']'), TS('h'), TS('{'), NS('N'), TS('}'), NS('V')),
-            Rule::Chain(2, TS('r'), NS('E')),
+            Rule::Chain(2, TS('r'), NS('E')),           // 17 18
             Rule::Chain(3, TS('r'), NS('E'), NS('N')),
-            Rule::Chain(4, TS('i'), TS('('), NS('W'), TS(')')),
+            Rule::Chain(4, TS('i'), TS('('), NS('W'), TS(')')),     // 19 20
             Rule::Chain(5, TS('i'), TS('('), NS('W'), TS(')'), NS('N'))
         ),
         Rule(NS('E'), GRB_ERROR_SERIES + 2,   // Ошибка в выражении

@@ -269,6 +269,7 @@ namespace MFST
 		GRB::Rule rule;
 		for (unsigned short k = 0; k < storestate.size(); k++)
 		{
+			std::cout << k << " ";
 			state = Get_Container(storestate, k);
 			rule = grebach.getRule(state.nrule);
 			MFST_TRACE7

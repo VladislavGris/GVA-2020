@@ -47,12 +47,12 @@ namespace Semantic
 						Log::WriteError(log, e);
 						errorCount++;
 					}
-					if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 1).lenta_position].idxTI].isArray)
-					{
-						e = ERROR_THROW_IN(408, lextable.table[state.lenta_position].sn, 0);// Попытка присвоить значение массива переменной, которая не является массивом
-						Log::WriteError(log, e);
-						errorCount++;
-					}
+					//if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 1).lenta_position].idxTI].isArray)
+					//{
+					//	e = ERROR_THROW_IN(408, lextable.table[state.lenta_position].sn, 0);// Попытка присвоить значение массива переменной, которая не является массивом
+					//	Log::WriteError(log, e);
+					//	errorCount++;
+					//}
 					idtable.table[lextable.table[state.lenta_position + 1].idxTI].declaration = true;
 					idtable.table[lextable.table[state.lenta_position + 1].idxTI].assignment = true;
 					break;
