@@ -271,29 +271,32 @@ namespace Gen
 									(*stream) << "call cpr" << std::endl;
 								(*stream) << std::endl;
 								break;
-							case 2:
-								//funcID = MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position;
-								//while (lextable.table[funcID + callParmCount + 1].lexema != PARM_SYMBOL)	// Пока не символ @
-								//	callParmCount++;
-								//for (int j = 0; j < callParmCount; j++)
-								//{
-								//	if (idtable.table[lextable.table[funcID + callParmCount - j].idxTI].isArray)
-								//		(*stream) << "push offset " << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].id << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].areaOfVisibility << std::endl;
-								//	else
-								//		(*stream) << "push " << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].id << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].areaOfVisibility << std::endl;
-								//}
-								//(*stream) << "call " << idtable.table[lextable.table[funcID].idxTI].id << std::endl;
-								//(*stream) << "push eax" << std::endl;
-								//if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].iddatatype == IT::IDDATATYPE::NUM)
-								//	(*stream) << "call ipr" << std::endl;
-								//else
-								//	(*stream) << "call cpr" << std::endl;
-								//(*stream) << std::endl;
+							}
+							break;
+						case 17: case 18:
+							switch (MFST::Get_Container(mfst.storestate, i + instrCount + 2).nrulechain)
+							{
+							case 0: case 1:
+								(*stream) << "ret " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << std::endl;
+								(*stream) << std::endl;
 								break;
 							}
 							break;
+						case 19: case 20:
+							funcID = tempState.lenta_position;
+							while (lextable.table[funcID + callParmCount + 1].lexema != PARM_SYMBOL)	// Пока не символ @
+								callParmCount++;
+							for (int j = 0; j < callParmCount; j++)
+							{
+								if (idtable.table[lextable.table[funcID + callParmCount - j].idxTI].isArray)
+									(*stream) << "push offset " << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].id << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].areaOfVisibility << std::endl;
+								else
+									(*stream) << "push " << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].id << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].areaOfVisibility << std::endl;
+							}
+							(*stream) << "call " << idtable.table[lextable.table[funcID].idxTI].id << std::endl;
+							(*stream) << std::endl;
+							break;
 						}
-
 					}
 					callParmCount = 0;
 					instrCount++;

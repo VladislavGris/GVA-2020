@@ -42,8 +42,16 @@ g3 dword ?
 e3 dword ?
 .code
 Compa proc a1:dword, b1:dword
+ret a1
+
+ret b1
+
 Compa endp
 Equal proc a2:dword, b2:dword
+ret l12
+
+ret l22
+
 Equal endp
 main proc
 lea edx, [l33]
@@ -89,6 +97,10 @@ push b3
 push a3
 call Compa
 mov g3, eax
+
+push b3
+push a3
+call Compa
 
 lea edx, [a3]
 mov eax, [edx]

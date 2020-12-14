@@ -35,6 +35,7 @@ number prio <- compare(hello, Hello)
 b <- 71o
 d <- 'd'
 number g <- Comparsion(a, b)
+Comparsion(a, b)
 if[a GE b] then
 {
 number e <- a
