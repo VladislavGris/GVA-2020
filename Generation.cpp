@@ -69,11 +69,14 @@ namespace Gen
 				}
 				else
 				{
-					*(stream) << "byte " << "'" << idtable.table[i].value.vstr.str <<"'";
+					
 					if (idtable.table[i].isArray)
+					{
+						*(stream) << "byte " << "'" << idtable.table[i].value.vstr.str << "'";
 						(*stream) << ", 0" << std::endl;
+					}
 					else
-						(*stream) << std::endl;
+						*(stream) << "byte " << "'" << idtable.table[i].value.vstr.str << "'" << std::endl;
 				}
 			}
 		}
@@ -90,13 +93,13 @@ namespace Gen
 					(*stream) << "dword ?" << std::endl;
 				else
 				{
-					(*stream) << "dword ?" << std::endl;
-					/*if (idtable.table[i].isArray)
+					//(*stream) << "dword ?" << std::endl;
+					if (idtable.table[i].isArray)
 					{
-						(*stream) << idtable.table[i + 1].value.num.value << " dup (?)" << std::endl;
+						(*stream) << "dword ?" << std::endl;
 					}
 					else
-						(*stream) << "?" << std::endl;*/
+						(*stream) << "byte ?" << std::endl;
 				}
 			}
 		}
@@ -104,7 +107,8 @@ namespace Gen
 	void CodeGeneration(std::ofstream* stream, IT::IdTable idtable, LT::LexTable lextable, MFST::Mfst mfst)
 	{
 		char funcName[ID_MAXSIZE];
-		int parmCount = 0, instrCount = 0, funcID, callParmCount = 0;
+		int parmCount = 0, instrCount = 0, funcID, callParmCount = 0, condEnd = 0, markCount = 0, instrPreFunc = 0, k;
+		bool wasElse = false, inCond = false;
 		MFST::MfstState state, tempState;
 		memset(funcName, 0, ID_MAXSIZE);
 		(*stream) << ".code" << std::endl;
@@ -136,11 +140,34 @@ namespace Gen
 					strcpy_s(funcName, MAIN_FUNC);
 					(*stream) << funcName << " proc" << std::endl;
 				}
-				while (MFST::Get_Container(mfst.storestate, i + instrCount + 1).nrule != START_SYMBOL_RULE && i + instrCount + 1 != mfst.storestate.size())		// ѕорходим по всем правилам до встречи правила из S
+				while (MFST::Get_Container(mfst.storestate, i + instrCount + 1).nrule != START_SYMBOL_RULE && i + instrCount /*+ 1*/ != mfst.storestate.size())		// ѕорходим по всем правилам до встречи правила из S
 				{
+					k = 0;
+					instrPreFunc = 0;
 					tempState = MFST::Get_Container(mfst.storestate, i + instrCount + 1);
+					while (MFST::Get_Container(mfst.storestate, i + instrCount + 2 + k).nrule != START_SYMBOL_RULE && i + k != mfst.storestate.size())
+					{
+						if (MFST::Get_Container(mfst.storestate, i + instrCount + 2 + k).nrule == OPERATOR_RULE)
+							instrPreFunc++;
+						k++;
+					}
 					if (tempState.nrule == OPERATOR_RULE)		// ѕравила, которые порождает нетерминал N
 					{
+						if ((tempState.lenta_position >= condEnd && inCond))
+						{
+							if (wasElse)
+							{
+								wasElse = false;
+								(*stream) << "f" << markCount << ":" << std::endl;
+							}
+							else
+							{
+								(*stream) << "jmp f" << ++markCount << std::endl;
+								(*stream) << "f" << markCount - 2 << ":" << std::endl;
+								(*stream) << "f" << markCount << ":" << std::endl;
+							}
+							inCond = false;
+						}
 						switch (tempState.nrulechain)			// ќпредел€ем конкретное правило
 						{
 						case 4: case 5:			// tisE | tisEN
@@ -150,15 +177,16 @@ namespace Gen
 							case 0: case 1:	// i | l
 								if (idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].iddatatype == IT::IDDATATYPE::NUM)
 								{
-									(*stream) << "lea edx, [" << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << "]" << std::endl;
-									(*stream) << "mov eax, [edx]" << std::endl;
-									(*stream) << "mov " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << ", eax" << std::endl;
+									(*stream) << "push " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << std::endl;
+									(*stream) << "pop " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << std::endl;
 								}
 								else
 								{
-									(*stream) << "lea edx, [" << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << "]" << std::endl;
-									(*stream) << "mov eax, [edx]" << std::endl;
+									(*stream) << "mov al, [" << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << "]" << std::endl;
 									(*stream) << "mov " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << ", al" << std::endl;
+									/*(*stream) << "lea edx, [" << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << "]" << std::endl;
+									(*stream) << "mov eax, [edx]" << std::endl;
+									(*stream) << "mov " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << ", eax" << std::endl;*/
 								}
 								//(*stream) << "push " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << std::endl;
 								//(*stream) << "pop " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << std::endl;
@@ -171,7 +199,7 @@ namespace Gen
 								for (int j = 0; j < callParmCount; j++)
 								{
 									if(idtable.table[lextable.table[funcID + callParmCount - j].idxTI].isArray)
-										(*stream) << "push offset " << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].id << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].areaOfVisibility << std::endl;
+										(*stream) << "push " << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].id << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].areaOfVisibility << std::endl;
 									else
 										(*stream) << "push " << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].id << idtable.table[lextable.table[funcID + callParmCount - j].idxTI].areaOfVisibility << std::endl;
 								}
@@ -180,12 +208,13 @@ namespace Gen
 								(*stream) << std::endl;
 								break;
 							case 3:				// i[E]
-								(*stream) << "lea edx, [" << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << "+";
+								(*stream) << "mov edx, " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << std::endl;
+								(*stream) << "lea edx, [edx + ";
 								if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].iddatatype == IT::IDDATATYPE::NUM)
 								{
 									(*stream) << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].value.num.value * 4 << "]" << std::endl;
 									(*stream) << "mov eax, [edx]" << std::endl;
-									(*stream) << "mov " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << ", eax" << std::endl;
+									(*stream) << "mov " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << ", al" << std::endl;
 								}
 								else
 								{
@@ -208,9 +237,11 @@ namespace Gen
 							case 0: case 1:	// i | l
 								if (idtable.table[lextable.table[tempState.lenta_position].idxTI].iddatatype == IT::IDDATATYPE::NUM)
 								{
-									(*stream) << "lea edx, [" << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << "]" << std::endl;
-									(*stream) << "mov eax, [edx]" << std::endl;
-									(*stream) << "mov " << idtable.table[lextable.table[tempState.lenta_position ].idxTI].id << idtable.table[lextable.table[tempState.lenta_position].idxTI].areaOfVisibility << ", eax" << std::endl;
+									(*stream) << "push " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << std::endl;
+									(*stream) << "pop " << idtable.table[lextable.table[tempState.lenta_position].idxTI].id << idtable.table[lextable.table[tempState.lenta_position].idxTI].areaOfVisibility << std::endl;
+									//(*stream) << "lea edx, [" << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << "]" << std::endl;
+									//(*stream) << "mov eax, [edx]" << std::endl;
+									//(*stream) << "mov " << idtable.table[lextable.table[tempState.lenta_position ].idxTI].id << idtable.table[lextable.table[tempState.lenta_position].idxTI].areaOfVisibility << ", eax" << std::endl;
 								}
 								else
 								{
@@ -238,6 +269,7 @@ namespace Gen
 								(*stream) << std::endl;
 								break;
 							case 3:				// i[E]
+
 								(*stream) << "lea edx, [" << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << "+";
 								if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].iddatatype == IT::IDDATATYPE::NUM)
 								{
@@ -273,11 +305,61 @@ namespace Gen
 								break;
 							}
 							break;
+						case 14:case 15: case 16:
+							condEnd = 0;
+							while (lextable.table[tempState.lenta_position + condEnd].lexema != RIGHT_BRACE)
+							{
+								condEnd++;
+							}
+							condEnd += tempState.lenta_position + 1;
+							(*stream) << "mov eax," << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << std::endl;
+							(*stream) << "mov ebx," << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].areaOfVisibility << std::endl;
+							(*stream) << "cmp eax,ebx" << std::endl;
+							if (!strcmp(lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position + 1].operptorSymbol, EQUAL))
+							{
+								(*stream) << "jne f" << ++markCount << std::endl;
+								(*stream) << "je f" << ++markCount << std::endl;
+								(*stream) << "f" << markCount << ":" << std::endl;
+							}
+							else if (!strcmp(lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position + 1].operptorSymbol, NOT_EQUAL))
+							{
+								(*stream) << "je f" << ++markCount << std::endl;
+								(*stream) << "jne f" << ++markCount << std::endl;
+								(*stream) << "f" << markCount << ":" << std::endl;
+							}
+							else if (!strcmp(lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position + 1].operptorSymbol, LESSER))
+							{
+								(*stream) << "jg f" << ++markCount << std::endl;
+								(*stream) << "jl f" << ++markCount << std::endl;
+								(*stream) << "f" << markCount << ":" << std::endl;
+							}
+							else if (!strcmp(lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position + 1].operptorSymbol, GREATER))
+							{
+								(*stream) << "jl f" << ++markCount << std::endl;
+								(*stream) << "jg f" << ++markCount << std::endl;
+								(*stream) << "f" << markCount << ":" << std::endl;
+							}
+							else if (!strcmp(lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position + 1].operptorSymbol, GE))
+							{
+								(*stream) << "jle f" << ++markCount << std::endl;
+								(*stream) << "jge f" << ++markCount << std::endl;
+								(*stream) << "f" << markCount << ":" << std::endl;
+							}
+							else
+							{
+								(*stream) << "jge f" << ++markCount << std::endl;
+								(*stream) << "jle f" << ++markCount << std::endl;
+								(*stream) << "f" << markCount << ":" << std::endl;
+							}
+							(*stream) << std::endl;
+							inCond = true;
+							break;
 						case 17: case 18:
 							switch (MFST::Get_Container(mfst.storestate, i + instrCount + 2).nrulechain)
 							{
 							case 0: case 1:
-								(*stream) << "ret " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << std::endl;
+								(*stream) << "mov eax, " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 2).lenta_position].idxTI].areaOfVisibility << std::endl;
+								(*stream) << "ret " << std::endl;
 								(*stream) << std::endl;
 								break;
 							}
@@ -297,6 +379,34 @@ namespace Gen
 							(*stream) << std::endl;
 							break;
 						}
+						if (instrPreFunc == 0)
+						{
+							if (wasElse)
+							{
+								wasElse = false;
+								(*stream) << "f" << markCount << ":" << std::endl;
+							}
+							else
+							{
+								(*stream) << "jmp f" << ++markCount << std::endl;
+								(*stream) << "f" << markCount - 2 << ":" << std::endl;
+								(*stream) << "f" << markCount << ":" << std::endl;
+							}
+							inCond = false;
+						}
+					}
+					if (tempState.nrule == ELSE_RULE)
+					{
+						wasElse = true;
+						inCond = true;
+						condEnd = 0;
+						(*stream) << "jmp f" << ++markCount << std::endl;
+						(*stream) << "f" << markCount - 2 << ":" << std::endl;
+						while (lextable.table[tempState.lenta_position + condEnd].lexema != RIGHT_BRACE)
+						{
+							condEnd++;
+						}
+						condEnd += tempState.lenta_position + 1;
 					}
 					callParmCount = 0;
 					instrCount++;
@@ -308,6 +418,8 @@ namespace Gen
 					(*stream) << "call ExitProcess" << std::endl;
 				}
 				(*stream) << funcName << " endp" << std::endl;
+				if (!strcmp(funcName, MAIN_FUNC))
+					(*stream) << "end main";
 				instrCount = 0;
 				parmCount = 0;
 			}

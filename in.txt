@@ -1,4 +1,4 @@
-number function Comparsion(number a, number b)		; Функция сравнивает 2 числа и возвращает наибольшее
+number function GorL(number a, number b)		; Функция сравнивает 2 числа и возвращает наибольшее
 begin
 if[a > b] then
 {
@@ -26,16 +26,17 @@ begin
 number a <- 1011b
 number b <- 13
 symbol c <- 'c'
+number num <- Equality(a,b)
 symbol d
-symbol hello[6] <- "Привет"
-symbol Hello[7] <- "привет"
-symbol h <- hello[1]
-number len <- strlen(hello)
-number prio <- compare(hello, Hello)
+symbol stra[6] <- "Привет"
+symbol strb[7] <- "привет"
+symbol h <- stra[1]
+number len <- strlen(stra)
+number prio <- compare(stra, strb)
 b <- 71o
 d <- 'd'
-number g <- Comparsion(a, b)
-Comparsion(a, b)
+number g <- GorL(a, b)
+GorL(a, b)
 if[a GE b] then
 {
 number e <- a

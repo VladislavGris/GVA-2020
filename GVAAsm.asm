@@ -31,63 +31,90 @@ l183 dword 0
 .data
 a3 dword ?
 b3 dword ?
-c3 dword ?
-d3 dword ?
-hello3 dword ?
-Hello3 dword ?
-h3 dword ?
+c3 byte ?
+num3 dword ?
+d3 byte ?
+stra3 dword ?
+strb3 dword ?
+h3 byte ?
 len3 dword ?
 prio3 dword ?
 g3 dword ?
 e3 dword ?
 .code
-Compa proc a1:dword, b1:dword
-ret a1
+GorL proc a1:dword, b1:dword
+mov eax,a1
+mov ebx,b1
+cmp eax,ebx
+jl f1
+jg f2
+f2:
 
-ret b1
+mov eax, a1
+ret 
 
-Compa endp
+jmp f3
+f1:
+mov eax, b1
+ret 
+
+f3:
+GorL endp
 Equal proc a2:dword, b2:dword
-ret l12
+mov eax,a2
+mov ebx,b2
+cmp eax,ebx
+jne f4
+je f5
+f5:
 
-ret l22
+mov eax, l12
+ret 
 
+jmp f6
+f4:
+mov eax, l22
+ret 
+
+f6:
 Equal endp
 main proc
-lea edx, [l33]
-mov eax, [edx]
-mov a3, eax
+push l33
+pop a3
 
-lea edx, [l43]
-mov eax, [edx]
-mov b3, eax
+push l43
+pop b3
 
-lea edx, [l53]
-mov eax, [edx]
+mov al, [l53]
 mov c3, al
 
+push b3
+push a3
+call Equal
+mov num3, eax
+
 push offset l73
-pop hello3
+pop stra3
 
 push offset l93
-pop Hello3
+pop strb3
 
-lea edx, [hello3+1]
+mov edx, stra3
+lea edx, [edx + 1]
 mov eax, [edx]
 mov h3, al
 
-push offset hello3
+push stra3
 call strle
 mov len3, eax
 
-push offset Hello3
-push offset hello3
+push strb3
+push stra3
 call compa
 mov prio3, eax
 
-lea edx, [l113]
-mov eax, [edx]
-mov b3, eax
+push l113
+pop b3
 
 lea edx, [l123]
 mov eax, [edx]
@@ -95,34 +122,62 @@ mov d3, al
 
 push b3
 push a3
-call Compa
+call GorL
 mov g3, eax
 
 push b3
 push a3
-call Compa
+call GorL
 
-lea edx, [a3]
-mov eax, [edx]
-mov e3, eax
+mov eax,a3
+mov ebx,b3
+cmp eax,ebx
+jle f7
+jge f8
+f8:
 
-lea edx, [b3]
-mov eax, [edx]
-mov a3, eax
+push a3
+pop e3
 
-lea edx, [e3]
-mov eax, [edx]
-mov b3, eax
+push b3
+pop a3
+
+push e3
+pop b3
+
+jmp f9
+f7:
+f9:
+mov eax,a3
+mov ebx,l133
+cmp eax,ebx
+jne f10
+je f11
+f11:
 
 push l143
 call cpr
 
+jmp f12
+f10:
 push l153
 call cpr
+
+f12:
+mov eax,a3
+mov ebx,l163
+cmp eax,ebx
+je f13
+jne f14
+f14:
 
 push l173
 call cpr
 
+jmp f15
+f13:
+f15:
 push 0
 call ExitProcess
 main endp
+end main

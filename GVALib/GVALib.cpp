@@ -17,14 +17,14 @@ extern "C"
 		else
 			return 0;					// str1 = str2
 	}
-	int __stdcall cpr(char* str)
+	void __stdcall cpr(char* str)
 	{
 		std::cout << str << std::endl;
-		return 0;
+		
 	}
-	int __stdcall ipr(int a)
+	void __stdcall ipr(int a)
 	{
 		std::cout << a << std::endl;
-		return 0;
+		
 	}
 }

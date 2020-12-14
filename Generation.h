@@ -3,6 +3,14 @@
 #define ASM_FILE_PATH	"GVAAsm.asm"
 #define MAIN_FUNC		"main"
 #define PARM_SYMBOL		'@'
+#define RIGHT_BRACE		'}'
+#define EQUAL			"="
+#define NOT_EQUAL		"#"
+#define LESSER			"<"
+#define GREATER			">"
+#define GE				"GE"
+#define LE				"LE"
+#define ELSE_RULE				5
 #define START_SYMBOL_RULE		0
 #define START_SYMBOL_FUNC_RULE	0
 #define START_SYMBOL_MAIN_RULE	1
