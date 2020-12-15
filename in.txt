@@ -21,6 +21,16 @@ return 0						; Возвращает 0, если числа не равны
 }
 end
 
+
+number function pr(symbol a, symbol b)
+begin
+symbol e <- a
+a <- b
+b <- e
+print(a)
+return 0
+end
+
 main
 begin
 number a <- 1011b
@@ -48,6 +58,8 @@ print("a не равно b")
 
 
 symbol e <- 'a'
+symbol u <- 'b'
+pr(e, u)
 print(e)
 e <- 'd'
 print(e)
@@ -73,5 +85,7 @@ print("Строки лексикографически равны")
 }
 stra[6] <- strb
 print(stra)
+symbol g <- stra[3]
+print(g)
 return 0
 end

@@ -47,12 +47,6 @@ namespace Semantic
 						Log::WriteError(log, e);
 						errorCount++;
 					}
-					//if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 1).lenta_position].idxTI].isArray)
-					//{
-					//	e = ERROR_THROW_IN(408, lextable.table[state.lenta_position].sn, 0);// Попытка присвоить значение массива переменной, которая не является массивом
-					//	Log::WriteError(log, e);
-					//	errorCount++;
-					//}
 					idtable.table[lextable.table[state.lenta_position + 1].idxTI].declaration = true;
 					idtable.table[lextable.table[state.lenta_position + 1].idxTI].assignment = true;
 					break;
@@ -72,6 +66,12 @@ namespace Semantic
 					if (!idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 2).lenta_position].idxTI].isArray)
 					{
 						e = ERROR_THROW_IN(409, lextable.table[state.lenta_position].sn, 0);// Попытка присвоить массиву значение, не являющееся массивом
+						Log::WriteError(log, e);
+						errorCount++;
+					}
+					if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 1).lenta_position].idxTI].value.num.value < strlen(idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 2).lenta_position].idxTI].value.vstr.str))
+					{
+						e = ERROR_THROW_IN(415, lextable.table[state.lenta_position].sn, 0);
 						Log::WriteError(log, e);
 						errorCount++;
 					}
@@ -274,31 +274,6 @@ namespace Semantic
 					break;
 				}
 				break;
-			//case 5:// V->...
-			//	switch (mfst.deducation.nrulechains[i])
-			//	{
-			//	case 0:
-			//		if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 1).lenta_position].idxTI].iddatatype != idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 2).lenta_position].idxTI].iddatatype)
-			//		{
-			//			e = ERROR_THROW_IN(400, lextable.table[state.lenta_position].sn, 0);
-			//			Log::WriteError(log, e);
-			//			errorCount++;
-			//		}
-			//		if (!idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 1).lenta_position].idxTI].declaration || !idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 2).lenta_position].idxTI].declaration)
-			//		{
-			//			e = ERROR_THROW_IN(402, lextable.table[state.lenta_position].sn, 0);
-			//			Log::WriteError(log, e);
-			//			errorCount++;
-			//		}
-			//		if (!idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 1).lenta_position].idxTI].assignment || !idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 2).lenta_position].idxTI].assignment)
-			//		{
-			//			e = ERROR_THROW_IN(403, lextable.table[state.lenta_position].sn, 0);
-			//			Log::WriteError(log, e);
-			//			errorCount++;
-			//		}
-			//		break;
-			//	}
-			//	break;
 			}
 		}
 		if (errorCount == 0)

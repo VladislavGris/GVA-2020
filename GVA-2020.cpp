@@ -44,8 +44,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		Semantic::CheckSemantic(log, lex.lextable, lex.idtable, mfst);
 		PN::ConvertToPolish(lex.idtable, lex.lextable, mfst);
 		LT::PrintToFile(lex.lextable);
-
+		Log::WriteInfo(log, "---- Генерация кода ----\nНачало работы генератора кода");
 		Gen::Generate(asmStream, lex.idtable, lex.lextable, mfst);
+		Log::WriteInfo(log, "Генерация кода выполнена успешно. Сгенерирован файл GVAAsm.asm");
+		Log::WriteInfo(log, "Работа транслятора завершена без ошибок");
 		Log::Close(log);
 		asmStream->close();
 		std::cout << "Выполнено без ошибок" << std::endl;

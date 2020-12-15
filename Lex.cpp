@@ -288,20 +288,7 @@ namespace Lex
 									FST::RELATION('9',2),FST::RELATION('0',2)),
 						FST::NODE(2, FST::RELATION('b', 3), FST::RELATION('o', 3)),
 						FST::NODE()
-					},
-					//// 22
-					//{
-					//	lexeme,
-					//	3,
-					//	FST::NODE(20, FST::RELATION('1',1), FST::RELATION('2',1), FST::RELATION('3',1), FST::RELATION('4',1),
-					//	FST::RELATION('5',1), FST::RELATION('6',1), FST::RELATION('7',1), FST::RELATION('8',1),
-					//	FST::RELATION('9',1),FST::RELATION('0',1),
-					//	FST::RELATION('1', 2), FST::RELATION('2', 2), FST::RELATION('3', 2), FST::RELATION('4', 2),
-					//	FST::RELATION('5', 2),FST::RELATION('6', 2),FST::RELATION('7', 2),FST::RELATION('8', 2),
-					//	FST::RELATION('9', 2),FST::RELATION('0', 2)),
-					//	FST::NODE(1, FST::RELATION('|', 0)),
-					//	FST::NODE()
-					//}
+					}
 				};
 				// wasChanged может быть установлен в true, если были считаны символ или символьная строка
 				if (!wasChanged)
@@ -332,11 +319,6 @@ namespace Lex
 								type = IT::L;
 								datatype = IT::NUM;
 								break;
-							/*case 22:
-								type = IT::L;
-								datatype = IT::NUM;
-								arrayLiteral = true;
-								break;*/
 							}
 							token = lexArray[i];
 							wasChanged = true;
