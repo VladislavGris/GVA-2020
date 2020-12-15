@@ -28,4 +28,7 @@ namespace Gen
 	void ConstGeneration(std::ofstream* stream, IT::IdTable idtable);
 	void DataGeneration(std::ofstream* stream, IT::IdTable idtable, MFST::Mfst mfst);
 	void CodeGeneration(std::ofstream* stream, IT::IdTable idtable, LT::LexTable lextable, MFST::Mfst mfst);
+	void WriteClearArray(std::ofstream* stream);
+	void WriteIntToChar(std::ofstream* stream);
+	void WritePrintConsole(std::ofstream* stream);
 }

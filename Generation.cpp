@@ -15,7 +15,16 @@ namespace Gen
 		(*stream) << "includelib kernel32.lib" << std::endl;
 		(*stream) << "includelib libucrt.lib" << std::endl;
 		(*stream) << "includelib Debug/GVALib.lib" << std::endl;
+		(*stream) << "includelib Debug/GVAAsmLib.lib" << std::endl;
 		(*stream) << "ExitProcess proto : dword" << std::endl;
+		(*stream) << "SetConsoleTitleA proto:dword" << std::endl;
+		(*stream) << "GetStdHandle proto:dword" << std::endl;
+		(*stream) << "WriteConsoleA proto:dword,: dword,: dword,: dword,: dword" << std::endl;
+		(*stream) << "SetConsoleOutputCP proto:dword" << std::endl;
+		(*stream) << "SetConsoleCP proto:dword" << std::endl;
+		(*stream) << "int_to_char PROTO, pstr:dword, intfield:sdword" << std::endl;
+		(*stream) << "printconsole proto:dword,:dword" << std::endl;
+		(*stream) << "cleararray proto, arr:dword" << std::endl;
 		(*stream) << "strle proto: dword" << std::endl;
 		(*stream) << "compa proto: dword,:dword" << std::endl;
 		(*stream) << "cpr proto: dword" << std::endl;
@@ -58,6 +67,7 @@ namespace Gen
 	void ConstGeneration(std::ofstream* stream, IT::IdTable idtable)
 	{
 		(*stream) << ".const" << std::endl;
+		(*stream) << "ConsoleTitle byte 'GVA-2020',0" << std::endl;
 		for (int i = 0; i < idtable.size; i++)		// Проход по всем полям IT
 		{
 			if (idtable.table[i].idtype == IT::IDTYPE::L)		// Литералы в .const
@@ -84,6 +94,8 @@ namespace Gen
 	void DataGeneration(std::ofstream* stream, IT::IdTable idtable, MFST::Mfst mfst)
 	{
 		(*stream) << ".data" << std::endl;
+		(*stream) << "result byte 40 dup(0)" << std::endl;
+		(*stream) << "consolehandle dword 0h" << std::endl;
 		for (int i = 0; i < idtable.size; i++)				// Проход по всем строкам IT
 		{
 			if (idtable.table[i].idtype == IT::IDTYPE::V)	// Выборка переменных
@@ -107,11 +119,11 @@ namespace Gen
 	void CodeGeneration(std::ofstream* stream, IT::IdTable idtable, LT::LexTable lextable, MFST::Mfst mfst)
 	{
 		char funcName[ID_MAXSIZE];
+		(*stream) << ".code" << std::endl;
 		int parmCount = 0, instrCount = 0, funcID, callParmCount = 0, condEnd = 0, markCount = 0, instrPreFunc = 0, k;
 		bool wasElse = false, inCond = false;
 		MFST::MfstState state, tempState;
 		memset(funcName, 0, ID_MAXSIZE);
-		(*stream) << ".code" << std::endl;
 		for (int i = 0; i < mfst.storestate.size(); i++)		// Проход по дереву разбора
 		{
 			state = MFST::Get_Container(mfst.storestate, i);
@@ -139,6 +151,10 @@ namespace Gen
 				{
 					strcpy_s(funcName, MAIN_FUNC);
 					(*stream) << funcName << " proc" << std::endl;
+					(*stream) << "push 1251d" << std::endl;
+					(*stream) << "call SetConsoleOutputCP" << std::endl;
+					(*stream) << "push 1251d" << std::endl;
+					(*stream) << "call SetConsoleCP" << std::endl;
 				}
 				while (MFST::Get_Container(mfst.storestate, i + instrCount + 1).nrule != START_SYMBOL_RULE && i + instrCount /*+ 1*/ != mfst.storestate.size())		// Порходим по всем правилам до встречи правила из S
 				{
@@ -296,11 +312,42 @@ namespace Gen
 							switch (MFST::Get_Container(mfst.storestate, i + instrCount + 2).nrulechain)
 							{
 							case 0: case 1:
-								(*stream) << "push " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << std::endl;
+								switch (idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].iddatatype)
+								{
+								case IT::IDDATATYPE::NUM:
+									(*stream) << "push " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << std::endl;
+									(*stream) << "push offset result" << std::endl;
+									(*stream) << "call int_to_char" << std::endl;
+									(*stream) << "push offset ConsoleTitle" << std::endl;
+									(*stream) << "push offset result" << std::endl;
+									(*stream) << "call printconsole" << std::endl;
+									(*stream) << "push offset result" << std::endl;
+									(*stream) << "call cleararray" << std::endl;
+									(*stream) << "mov eax, 10" << std::endl;	// строки одинаковые
+									(*stream) << "mov result, al" << std::endl;
+									(*stream) << "push offset ConsoleTitle" << std::endl;
+									(*stream) << "push offset result" << std::endl;
+									(*stream) << "call printconsole" << std::endl;
+									break;
+								case IT::IDDATATYPE::SYM:
+									(*stream) << "push offset ConsoleTitle" << std::endl;
+									if (idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].isArray && idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].idtype != IT::IDTYPE::L)
+										(*stream) << "push " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << std::endl;
+									else
+										(*stream) << "push offset " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << std::endl;
+									(*stream) << "call printconsole" << std::endl;
+									(*stream) << "mov eax, 10" << std::endl;
+									(*stream) << "mov result, al" << std::endl;
+									(*stream) << "push offset ConsoleTitle" << std::endl;
+									(*stream) << "push offset result" << std::endl;
+									(*stream) << "call printconsole" << std::endl;
+									break;
+								}
+								/*(*stream) << "push " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << std::endl;
 								if (idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].iddatatype == IT::IDDATATYPE::NUM)
 									(*stream) << "call ipr" << std::endl;
 								else
-									(*stream) << "call cpr" << std::endl;
+									(*stream) << "call cpr" << std::endl;*/
 								(*stream) << std::endl;
 								break;
 							}

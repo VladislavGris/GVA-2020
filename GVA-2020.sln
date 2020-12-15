@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GVA-2020", "GVA-2020.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GVALib", "GVALib\GVALib.vcxproj", "{B7C1F5C6-4AB8-4AC1-985F-FB98943E40A1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GVAAsmLib", "GVAAsmLib\GVAAsmLib.vcxproj", "{3C334D06-36DE-41F1-8486-D4A31D3179B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{B7C1F5C6-4AB8-4AC1-985F-FB98943E40A1}.Release|x64.Build.0 = Release|x64
 		{B7C1F5C6-4AB8-4AC1-985F-FB98943E40A1}.Release|x86.ActiveCfg = Release|Win32
 		{B7C1F5C6-4AB8-4AC1-985F-FB98943E40A1}.Release|x86.Build.0 = Release|Win32
+		{3C334D06-36DE-41F1-8486-D4A31D3179B5}.Debug|x64.ActiveCfg = Debug|x64
+		{3C334D06-36DE-41F1-8486-D4A31D3179B5}.Debug|x64.Build.0 = Debug|x64
+		{3C334D06-36DE-41F1-8486-D4A31D3179B5}.Debug|x86.ActiveCfg = Debug|Win32
+		{3C334D06-36DE-41F1-8486-D4A31D3179B5}.Debug|x86.Build.0 = Debug|Win32
+		{3C334D06-36DE-41F1-8486-D4A31D3179B5}.Release|x64.ActiveCfg = Release|x64
+		{3C334D06-36DE-41F1-8486-D4A31D3179B5}.Release|x64.Build.0 = Release|x64
+		{3C334D06-36DE-41F1-8486-D4A31D3179B5}.Release|x86.ActiveCfg = Release|Win32
+		{3C334D06-36DE-41F1-8486-D4A31D3179B5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

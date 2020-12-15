@@ -30,6 +30,7 @@ number num <- Equality(a,b)
 symbol d
 symbol stra[6] <- "Привет"
 symbol strb[7] <- "привет"
+print(stra)
 symbol h <- stra[1]
 number len <- strlen(stra)
 number prio <- compare(stra, strb)

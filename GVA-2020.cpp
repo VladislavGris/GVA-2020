@@ -1,5 +1,4 @@
 ﻿#include "GVA-2020.h"
-
 int _tmain(int argc, _TCHAR* argv[])
 {
 	setlocale(LC_CTYPE, "rus");

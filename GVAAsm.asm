@@ -3,13 +3,23 @@
 includelib kernel32.lib
 includelib libucrt.lib
 includelib Debug/GVALib.lib
+includelib Debug/GVAAsmLib.lib
 ExitProcess proto : dword
+SetConsoleTitleA proto:dword
+GetStdHandle proto:dword
+WriteConsoleA proto:dword,: dword,: dword,: dword,: dword
+SetConsoleOutputCP proto:dword
+SetConsoleCP proto:dword
+int_to_char PROTO, pstr:dword, intfield:sdword
+printconsole proto:dword,:dword
+cleararray proto, arr:dword
 strle proto: dword
 compa proto: dword,:dword
 cpr proto: dword
 ipr proto: dword
 .stack 4096
 .const
+ConsoleTitle byte 'GVA-2020',0
 l12 dword 1
 l22 dword 0
 l33 dword 11
@@ -29,6 +39,8 @@ l163 dword 3
 l173 byte 'a не равно 3', 0
 l183 dword 0
 .data
+result byte 40 dup(0)
+consolehandle dword 0h
 a3 dword ?
 b3 dword ?
 c3 byte ?
@@ -79,6 +91,10 @@ ret
 f6:
 Equal endp
 main proc
+push 1251d
+call SetConsoleOutputCP
+push 1251d
+call SetConsoleCP
 push l33
 pop a3
 
@@ -98,6 +114,15 @@ pop stra3
 
 push offset l93
 pop strb3
+
+push offset ConsoleTitle
+push stra3
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
 
 mov edx, stra3
 lea edx, [edx + 1]
@@ -155,13 +180,25 @@ jne f10
 je f11
 f11:
 
-push l143
-call cpr
+push offset ConsoleTitle
+push offset l143
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
 
 jmp f12
 f10:
-push l153
-call cpr
+push offset ConsoleTitle
+push offset l153
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
 
 f12:
 mov eax,a3
@@ -171,8 +208,14 @@ je f13
 jne f14
 f14:
 
-push l173
-call cpr
+push offset ConsoleTitle
+push offset l173
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
 
 jmp f15
 f13:
