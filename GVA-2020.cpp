@@ -39,9 +39,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		else
 			throw ERROR_THROW(306);
 		mfst.savededucation();
-#ifdef TREE
 		mfst.printrules();
-#endif
 		Log::WriteInfo(log, "---- Семантический анализ ----\nНачало работы семантического анализатора");
 		Semantic::CheckSemantic(log, lex.lextable, lex.idtable, mfst);
 		PN::ConvertToPolish(lex.idtable, lex.lextable, mfst);

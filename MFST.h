@@ -4,7 +4,9 @@
 #include <iomanip>
 #include "GRB.h"
 #include "Lex.h"
+#include <fstream>
 //#define MFSTT
+#define MFST_FILE_PATH  "MFST.txt"
 #define TREE
 #define MFST_DIAGN_MAXSIZE 2*ERROR_MAXSIZE_MESSAGE
 #define MFST_DIAGN_NUMBER 3

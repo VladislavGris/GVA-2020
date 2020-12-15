@@ -243,8 +243,17 @@ namespace Gen
 							}
 							break;
 						case 6: case 7:		// ti[E]sE | ti[E]sEN
-							(*stream) << "push offset " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].areaOfVisibility << std::endl;
-							(*stream) << "pop " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << std::endl;
+							switch (MFST::Get_Container(mfst.storestate, i + instrCount + 3).nrulechain)
+							{
+							case 0:
+								(*stream) << "mov eax, " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].areaOfVisibility << std::endl;
+								(*stream) << "mov " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility <<", eax"<< std::endl;
+								break;
+							case 1:
+								(*stream) << "push offset " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].areaOfVisibility << std::endl;
+								(*stream) << "pop " << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].id << idtable.table[lextable.table[tempState.lenta_position + 1].idxTI].areaOfVisibility << std::endl;
+								break;
+							}
 							(*stream) << std::endl;
 							break;
 						case 8: case 9:		// isE | isEN
@@ -304,8 +313,19 @@ namespace Gen
 							}
 							break;
 						case 10: case 11:	// i[E]sE | i[E]sEN
-							(*stream) << "push offset " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].areaOfVisibility << std::endl;
-							(*stream) << "pop " << idtable.table[lextable.table[tempState.lenta_position].idxTI].id << idtable.table[lextable.table[tempState.lenta_position].idxTI].areaOfVisibility << std::endl;
+							switch (MFST::Get_Container(mfst.storestate, i + instrCount + 3).nrulechain)
+							{
+							case 0:
+								(*stream) << "mov eax, " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].areaOfVisibility << std::endl;
+								(*stream) << "mov " << idtable.table[lextable.table[tempState.lenta_position].idxTI].id << idtable.table[lextable.table[tempState.lenta_position].idxTI].areaOfVisibility << ", eax" << std::endl;
+								break;
+							case 1:
+								(*stream) << "push offset " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].areaOfVisibility << std::endl;
+								(*stream) << "pop " << idtable.table[lextable.table[tempState.lenta_position].idxTI].id << idtable.table[lextable.table[tempState.lenta_position].idxTI].areaOfVisibility << std::endl;
+								break;
+							}
+							//(*stream) << "push offset " << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].id << idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + instrCount + 3).lenta_position].idxTI].areaOfVisibility << std::endl;
+							//(*stream) << "pop " << idtable.table[lextable.table[tempState.lenta_position].idxTI].id << idtable.table[lextable.table[tempState.lenta_position].idxTI].areaOfVisibility << std::endl;
 							(*stream) << std::endl;
 							break;
 						case 12: case 13:	// p(E) | p(E)N
@@ -426,7 +446,7 @@ namespace Gen
 							(*stream) << std::endl;
 							break;
 						}
-						if (instrPreFunc == 0)
+						if (instrPreFunc == 0 && inCond)
 						{
 							if (wasElse)
 							{

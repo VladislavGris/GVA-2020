@@ -24,35 +24,37 @@ l12 dword 1
 l22 dword 0
 l33 dword 11
 l43 dword 13
-l53 byte 'c'
-l63 dword 6
-l73 byte 'Привет', 0
-l83 dword 7
-l93 byte 'привет', 0
-l103 dword 1
-l113 dword 57
-l123 byte 'd'
-l133 dword 5
-l143 byte 'a равно 5', 0
-l153 byte 'a не равно 5', 0
-l163 dword 3
-l173 byte 'a не равно 3', 0
-l183 dword 0
+l53 byte 'a больше или равно b', 0
+l63 byte 'a меньше b', 0
+l73 dword 1
+l83 byte 'a равно b', 0
+l93 byte 'a не равно b', 0
+l103 byte 'a'
+l113 byte 'd'
+l123 dword 6
+l133 byte 'привет', 0
+l143 dword 6
+l153 byte 'Привет', 0
+l163 dword 2
+l173 byte 'Строка stra лексикографически меньше строки strb', 0
+l183 dword 1
+l193 byte 'Строка stra лексикографически больше строки strb', 0
+l203 dword 0
+l213 byte 'Строки лексикографически равны', 0
+l223 dword 6
+l233 dword 0
 .data
 result byte 40 dup(0)
 consolehandle dword 0h
 a3 dword ?
 b3 dword ?
-c3 byte ?
-num3 dword ?
-d3 byte ?
+c3 dword ?
+d3 dword ?
+e3 byte ?
 stra3 dword ?
 strb3 dword ?
-h3 byte ?
 len3 dword ?
-prio3 dword ?
-g3 dword ?
-e3 dword ?
+cmp3 dword ?
 .code
 GorL proc a1:dword, b1:dword
 mov eax,a1
@@ -101,58 +103,24 @@ pop a3
 push l43
 pop b3
 
-mov al, [l53]
-mov c3, al
-
 push b3
 push a3
-call Equal
-mov num3, eax
+call GorL
+mov c3, eax
 
-push offset l73
-pop stra3
-
-push offset l93
-pop strb3
-
+push c3
+push offset result
+call int_to_char
 push offset ConsoleTitle
-push stra3
+push offset result
 call printconsole
+push offset result
+call cleararray
 mov eax, 10
 mov result, al
 push offset ConsoleTitle
 push offset result
 call printconsole
-
-mov edx, stra3
-lea edx, [edx + 1]
-mov eax, [edx]
-mov h3, al
-
-push stra3
-call strle
-mov len3, eax
-
-push strb3
-push stra3
-call compa
-mov prio3, eax
-
-push l113
-pop b3
-
-lea edx, [l123]
-mov eax, [edx]
-mov d3, al
-
-push b3
-push a3
-call GorL
-mov g3, eax
-
-push b3
-push a3
-call GorL
 
 mov eax,a3
 mov ebx,b3
@@ -161,27 +129,44 @@ jle f7
 jge f8
 f8:
 
-push a3
-pop e3
-
-push b3
-pop a3
-
-push e3
-pop b3
+push offset ConsoleTitle
+push offset l53
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
 
 jmp f9
 f7:
+push offset ConsoleTitle
+push offset l63
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
+
 f9:
-mov eax,a3
-mov ebx,l133
+push b3
+pop a3
+
+push b3
+push a3
+call Equal
+mov d3, eax
+
+mov eax,d3
+mov ebx,l73
 cmp eax,ebx
 jne f10
 je f11
 f11:
 
 push offset ConsoleTitle
-push offset l143
+push offset l83
 call printconsole
 mov eax, 10
 mov result, al
@@ -192,7 +177,7 @@ call printconsole
 jmp f12
 f10:
 push offset ConsoleTitle
-push offset l153
+push offset l93
 call printconsole
 mov eax, 10
 mov result, al
@@ -201,11 +186,83 @@ push offset result
 call printconsole
 
 f12:
-mov eax,a3
+mov al, [l103]
+mov e3, al
+
+push offset ConsoleTitle
+push offset e3
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
+
+lea edx, [l113]
+mov eax, [edx]
+mov e3, al
+
+push offset ConsoleTitle
+push offset e3
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
+
+push offset l133
+pop stra3
+
+push offset l153
+pop strb3
+
+push stra3
+call strle
+mov len3, eax
+
+push offset ConsoleTitle
+push stra3
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
+
+push offset ConsoleTitle
+push strb3
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
+
+push len3
+push offset result
+call int_to_char
+push offset ConsoleTitle
+push offset result
+call printconsole
+push offset result
+call cleararray
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
+
+push strb3
+push stra3
+call compa
+mov cmp3, eax
+
+mov eax,cmp3
 mov ebx,l163
 cmp eax,ebx
-je f13
-jne f14
+jne f13
+je f14
 f14:
 
 push offset ConsoleTitle
@@ -220,6 +277,56 @@ call printconsole
 jmp f15
 f13:
 f15:
+mov eax,cmp3
+mov ebx,l183
+cmp eax,ebx
+jne f16
+je f17
+f17:
+
+push offset ConsoleTitle
+push offset l193
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
+
+jmp f18
+f16:
+f18:
+mov eax,cmp3
+mov ebx,l203
+cmp eax,ebx
+jne f19
+je f20
+f20:
+
+push offset ConsoleTitle
+push offset l213
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
+
+jmp f21
+f19:
+f21:
+mov eax, strb3
+mov stra3, eax
+
+push offset ConsoleTitle
+push stra3
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
+
 push 0
 call ExitProcess
 main endp

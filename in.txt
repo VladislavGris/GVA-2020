@@ -25,36 +25,53 @@ main
 begin
 number a <- 1011b
 number b <- 13
-symbol c <- 'c'
-number num <- Equality(a,b)
-symbol d
-symbol stra[6] <- "Привет"
-symbol strb[7] <- "привет"
-print(stra)
-symbol h <- stra[1]
-number len <- strlen(stra)
-number prio <- compare(stra, strb)
-b <- 71o
-d <- 'd'
-number g <- GorL(a, b)
-GorL(a, b)
+number c <- GorL(a,b)
+print(c)
 if[a GE b] then
 {
-number e <- a
-a <- b
-b <- e
-}
-if[a = 5] then
-{
-print("a равно 5")
+print("a больше или равно b")
 }
 else
 {
-print("a не равно 5")
+print("a меньше b")
 }
-if[a # 3] then
+a <- b
+number d <- Equality(a,b)
+if[d = 1] then
 {
-print("a не равно 3")
+print("a равно b")
 }
+else
+{
+print("a не равно b")
+}
+
+
+symbol e <- 'a'
+print(e)
+e <- 'd'
+print(e)
+
+symbol stra[6] <- "привет"
+symbol strb[6] <- "Привет"
+number len <- strlen(stra)
+print(stra)
+print(strb)
+print(len)
+number cmp <- compare(stra, strb)
+if[cmp = 2] then
+{
+print("Строка stra лексикографически меньше строки strb")
+}
+if[cmp = 1] then
+{
+print("Строка stra лексикографически больше строки strb")
+}
+if[cmp = 0] then
+{
+print("Строки лексикографически равны")
+}
+stra[6] <- strb
+print(stra)
 return 0
 end

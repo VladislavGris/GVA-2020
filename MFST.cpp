@@ -27,7 +27,7 @@ char rbuf[205], sbuf[205], lbuf[1024];
 #define MFST_TRACE4(c)		std::cout<<std::setw(4)<<std::left<<++FST_TRACE_n<<": "<<std::setw(20)<<std::left<<c<<std::endl;
 #define MFST_TRACE5(c)		std::cout<<std::setw(4)<<std::left<<FST_TRACE_n<<": "<<std::setw(20)<<std::left<<c<<std::endl;
 #define MFST_TRACE6(c,k)	std::cout<<std::setw(4)<<std::left<<FST_TRACE_n<<": "<<std::setw(20)<<std::left<<c<<k<<std::endl;
-#define MFST_TRACE7			std::cout<<std::setw(4)<<std::left<<state.lenta_position<< " " << state.nrule <<" "<<  state.nrulechain <<": " \
+#define MFST_TRACE7			fout<<std::setw(4)<<std::left<<state.lenta_position<< " " << state.nrule <<" "<<  state.nrulechain <<": " \
 									 <<std::setw(20)<<std::left<<rule.getCRule(rbuf, state.nrulechain) \
 									 <<std::endl;
 
@@ -267,9 +267,11 @@ namespace MFST
 	{
 		MfstState state;
 		GRB::Rule rule;
+		std::ofstream fout;
+		fout.open(MFST_FILE_PATH);
 		for (unsigned short k = 0; k < storestate.size(); k++)
 		{
-			std::cout << k << " ";
+			fout << k << " ";
 			state = Get_Container(storestate, k);
 			rule = grebach.getRule(state.nrule);
 			MFST_TRACE7
