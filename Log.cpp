@@ -23,6 +23,11 @@ namespace Log
 		*(log.stream) << c << '\n';
 		log.stream->flush();
 	}
+	void WriteInfo(LOG log, const char* c, int a)
+	{
+		*(log.stream) << c << a<< '\n';
+		log.stream->flush();
+	}
 	void WriteLine(LOG log, const char* c, ...)
 	{
 		va_list args;
@@ -80,10 +85,16 @@ namespace Log
 	}
 	void WriteError(LOG log, Error::ERROR error)
 	{
-		if (log.stream->is_open())
+		if (error.inext.line < 0)
+		{
+			*(log.stream) << "Ошибка " << error.id << " : " << error.message << std::endl;
+			std::cout << "Ошибка " << error.id << " : " << error.message << std::endl;
+		}
+		else
+		{
 			*(log.stream) << "Ошибка " << error.id << " : " << error.message << ", строка " << error.inext.line << ", позиция " << error.inext.col << std::endl;
-		/*else*/
 			std::cout << "Ошибка " << error.id << " : " << error.message << ", строка " << error.inext.line << ", позиция " << error.inext.col << std::endl;
+		}
 	}
 	void Close(LOG log)
 	{

@@ -1,4 +1,4 @@
-number function GorL(number a, number b)		; Функция сравнивает 2 числа и возвращает наибольшее
+number function gorl(number a, number b)		; Функция сравнивает 2 числа и возвращает наибольшее
 begin
 if[a > b] then
 {
@@ -9,7 +9,7 @@ else
 return b
 }
 end
-number function Equality(number a, number b)		; Функция определяет, равны ли 2 числа
+number function equality(number a, number b)		; Функция определяет, равны ли 2 числа
 begin
 if[a = b] then
 {
@@ -20,8 +20,6 @@ else
 return 0						; Возвращает 0, если числа не равны
 }
 end
-
-
 number function pr(symbol a, symbol b)
 begin
 symbol e <- a
@@ -30,12 +28,12 @@ b <- e
 print(a)
 return 0
 end
-
 main
 begin
 number a <- 1011b
-number b <- 13
-number c <- GorL(a,b)
+number b <- -13
+print(b)
+number c <- gorl(a,b)
 print(c)
 if[a GE b] then
 {
@@ -46,7 +44,7 @@ else
 print("a меньше b")
 }
 a <- b
-number d <- Equality(a,b)
+number d <- equality(a,b)
 if[d = 1] then
 {
 print("a равно b")
@@ -55,15 +53,12 @@ else
 {
 print("a не равно b")
 }
-
-
 symbol e <- 'a'
 symbol u <- 'b'
 pr(e, u)
 print(e)
 e <- 'd'
 print(e)
-
 symbol stra[6] <- "привет"
 symbol strb[6] <- "Привет"
 number len <- strlen(stra)

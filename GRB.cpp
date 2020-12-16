@@ -8,7 +8,7 @@ namespace GRB
         6,
         Rule(NS('S'), GRB_ERROR_SERIES + 0,  // Неверная структура программы
             2,
-            Rule::Chain(/*12*/10, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('b'), NS('N'), /*TS('r'), NS('E'),*/ TS('e'), NS('S')),
+            Rule::Chain(10, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('b'), NS('N'), TS('e'), NS('S')),
             Rule::Chain(6, TS('m'), TS('b'), NS('N'), TS('r'), NS('E'), TS('e'))
         ),
         Rule(NS('N'), GRB_ERROR_SERIES + 1,   // Ошибочный оператор
@@ -58,7 +58,6 @@ namespace GRB
         ),
         Rule(NS('V'), GRB_ERROR_SERIES + 5, // Ошибка в конструкции условного оператора
             2,
-            //Rule::Chain(12, TS('c'), TS('a'), TS('['), NS('E'), TS('o'), NS('E'), TS(']'), TS('h'), TS('{'), NS('N'), TS('}'), NS('V')),  // else if[...]then{...}
             Rule::Chain(4, TS('c'), TS('{'), NS('N'), TS('}')),             //else{...}
             Rule::Chain(5, TS('c'), TS('{'), NS('N'), TS('}'), NS('N'))
         )

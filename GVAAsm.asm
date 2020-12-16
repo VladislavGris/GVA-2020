@@ -22,34 +22,25 @@ l12 dword 1
 l22 dword 0
 l33 dword 0
 l44 dword 11
-l54 dword 13
+l54 dword -13
 l64 byte 'a больше или равно b', 0
-
 l74 byte 'a меньше b', 0
-
 l84 dword 1
 l94 byte 'a равно b', 0
-
 l104 byte 'a не равно b', 0
-
 l114 byte 'a'
 l124 byte 'b'
 l134 byte 'd'
 l144 dword 6
 l154 byte 'привет', 0
-
 l164 dword 6
 l174 byte 'Привет', 0
-
 l184 dword 2
 l194 byte 'Строка stra лексикографически меньше строки strb', 0
-
 l204 dword 1
 l214 byte 'Строка stra лексикографически больше строки strb', 0
-
 l224 dword 0
 l234 byte 'Строки лексикографически равны', 0
-
 l244 dword 6
 l254 dword 3
 l264 dword 0
@@ -69,7 +60,7 @@ len4 dword ?
 cmp4 dword ?
 g4 byte 0,0
 .code
-GorL proc a1:dword, b1:dword
+gorl proc a1:dword, b1:dword
 mov eax,a1
 mov ebx,b1
 cmp eax,ebx
@@ -86,8 +77,8 @@ mov eax, b1
 ret 
 
 f3:
-GorL endp
-Equal proc a2:dword, b2:dword
+gorl endp
+equal proc a2:dword, b2:dword
 mov eax,a2
 mov ebx,b2
 cmp eax,ebx
@@ -104,7 +95,7 @@ mov eax, l22
 ret 
 
 f6:
-Equal endp
+equal endp
 pr proc a3:byte, b3:byte
 mov al, [a3]
 mov e3, al
@@ -143,8 +134,22 @@ push l54
 pop b4
 
 push b4
+push offset result
+call int_to_char
+push offset ConsoleTitle
+push offset result
+call printconsole
+push offset result
+call cleararray
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
+
+push b4
 push a4
-call GorL
+call gorl
 mov c4, eax
 
 push c4
@@ -194,7 +199,7 @@ pop a4
 
 push b4
 push a4
-call Equal
+call equal
 mov d4, eax
 
 mov eax,d4
@@ -385,6 +390,39 @@ mov g4, al
 push offset ConsoleTitle
 lea eax, g4
 push eax
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
+
+push a4
+push offset result
+call int_to_char
+push offset ConsoleTitle
+push offset result
+call printconsole
+push offset result
+call cleararray
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
+
+push offset ConsoleTitle
+lea eax, e4
+push eax
+call printconsole
+mov eax, 10
+mov result, al
+push offset ConsoleTitle
+push offset result
+call printconsole
+
+push offset ConsoleTitle
+push stra4
 call printconsole
 mov eax, 10
 mov result, al

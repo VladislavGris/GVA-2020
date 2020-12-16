@@ -118,6 +118,12 @@ namespace Semantic
 						Log::WriteError(log, e);
 						errorCount++;
 					}
+					if (idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 1).lenta_position].idxTI].value.num.value < strlen(idtable.table[lextable.table[MFST::Get_Container(mfst.storestate, i + 2).lenta_position].idxTI].value.vstr.str))
+					{
+						e = ERROR_THROW_IN(415, lextable.table[state.lenta_position].sn, 0);
+						Log::WriteError(log, e);
+						errorCount++;
+					}
 					idtable.table[lextable.table[state.lenta_position].idxTI].assignment = true;
 					break;
 				case 14: case 15: case 16:	// a[EoE]h{N}
@@ -281,7 +287,7 @@ namespace Semantic
 		else
 		{
 			
-			Log::WriteInfo(log, "Семантический анализ завершен с ошибками. Количество ошибок: " );
+			Log::WriteInfo(log, "Семантический анализ завершен с ошибками. Количество ошибок: ",errorCount );
 			throw ERROR_THROW(419)
 		}
 	}

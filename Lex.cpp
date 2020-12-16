@@ -9,7 +9,8 @@ namespace Lex
 		const char lexArray[FST_ARRAY_SIZE] = { LEX_NUMBER, LEX_FUNCTION, LEX_SYMBOL, LEX_BEGIN, LEX_IF, LEX_THEN, LEX_RETURN,
 												LEX_ELSE, LEX_END, LEX_MAIN, LEX_PRINT,LEX_LESSER, LEX_ASIGNMENT, LEX_GE,
 												LEX_GREATER, LEX_EQUAL, LEX_NOT_EQUAL, LEX_ID, LEX_LITERAL,LEX_LITERAL, LEX_LITERAL, LEX_LITERAL/*, LEX_LITERAL*/};
-		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false, wasError = false, isCommentary = false, arrayLiteral = false;
+		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false, wasError = false, isCommentary = false, arrayLiteral = false, hasMain = false, wasFuncRet = true,
+			inIf = false, inElse = false, ifRet = false, elseRet = false, wasIf = false, wasElse = false;
 		IT::IDDATATYPE datatype;
 		IT::IDTYPE type;
 		LT::Entry tempEntry;
@@ -207,7 +208,7 @@ namespace Lex
 					{
 						lexeme,
 						2,
-						FST::NODE(104 ,FST::RELATION('a',0), FST::RELATION('b',0), FST::RELATION('c',0), FST::RELATION('d',0),
+						FST::NODE(52 ,FST::RELATION('a',0), FST::RELATION('b',0), FST::RELATION('c',0), FST::RELATION('d',0),
 									FST::RELATION('e',0), FST::RELATION('f',0), FST::RELATION('g',0), FST::RELATION('h',0),
 									FST::RELATION('i',0), FST::RELATION('j',0), FST::RELATION('k',0) ,FST::RELATION('l',0),
 									FST::RELATION('n',0), FST::RELATION('m',0) ,FST::RELATION('o',0), FST::RELATION('p',0),
@@ -220,21 +221,7 @@ namespace Lex
 									FST::RELATION('n',1), FST::RELATION('m',1) ,FST::RELATION('o',1), FST::RELATION('p',1),
 									FST::RELATION('q',1), FST::RELATION('r',1), FST::RELATION('s',1), FST::RELATION('t',1),
 									FST::RELATION('u',1), FST::RELATION('v',1), FST::RELATION('w',1), FST::RELATION('x',1),
-									FST::RELATION('y',1),FST::RELATION('z',1),
-									FST::RELATION('A',0), FST::RELATION('B',0), FST::RELATION('C',0), FST::RELATION('D',0),
-									FST::RELATION('E',0), FST::RELATION('F',0), FST::RELATION('G',0), FST::RELATION('H',0),
-									FST::RELATION('I',0), FST::RELATION('J',0), FST::RELATION('K',0) ,FST::RELATION('L',0),
-									FST::RELATION('N',0), FST::RELATION('M',0) ,FST::RELATION('O',0), FST::RELATION('P',0),
-									FST::RELATION('Q',0), FST::RELATION('R',0), FST::RELATION('S',0), FST::RELATION('T',0),
-									FST::RELATION('U',0), FST::RELATION('V',0), FST::RELATION('W',0), FST::RELATION('X',0),
-									FST::RELATION('Y',0),FST::RELATION('Z',0),
-									FST::RELATION('A',1), FST::RELATION('B',1), FST::RELATION('C',1), FST::RELATION('D',1),
-									FST::RELATION('E',1), FST::RELATION('F',1), FST::RELATION('G',1), FST::RELATION('H',1),
-									FST::RELATION('I',1), FST::RELATION('J',1), FST::RELATION('K',1) ,FST::RELATION('L',1),
-									FST::RELATION('N',1), FST::RELATION('M',1) ,FST::RELATION('O',1), FST::RELATION('P',1),
-									FST::RELATION('Q',1), FST::RELATION('R',1), FST::RELATION('S',1), FST::RELATION('T',1),
-									FST::RELATION('U',1), FST::RELATION('V',1), FST::RELATION('W',1), FST::RELATION('X',1),
-									FST::RELATION('Y',1),FST::RELATION('Z',1)),
+									FST::RELATION('y',1),FST::RELATION('z',1)),
 						FST::NODE()
 					},
 					// 18 (1|2|3|4|5|6|7|8|9|0)*
@@ -326,6 +313,67 @@ namespace Lex
 						}
 					if (areParametrs && symbol == END_OF_PARAMETERS)
 						areParametrs = false;
+					if (token == LEX_MAIN)
+					{
+						if (hasMain)
+							throw ERROR_THROW_IN(205, strCount, position);
+						hasMain = true;
+					}
+					if (token == LEX_RETURN)
+					{
+						if (inIf)
+							ifRet = true;
+						else if (inElse)
+							elseRet = true;
+						else
+							wasFuncRet = true;
+					}
+					if (token == LEX_FUNCTION || token == LEX_MAIN)
+					{
+						//if((wasElse && wasIf && ifRet && elseRet))
+						if (wasElse && wasIf)
+						{
+							if (!ifRet || !elseRet)
+							{
+								e = ERROR_THROW_IN(207, strCount - 1, 0);
+								Log::WriteError(log, e);
+								wasError = true;
+							}
+						}
+						else if (!wasFuncRet)
+						{
+							e = ERROR_THROW_IN(207, strCount - 1, 0);
+							Log::WriteError(log, e);
+							wasError = true;
+						}
+						wasElse = false;
+						wasIf = false;
+						ifRet = false;
+						elseRet = false;
+						wasFuncRet = false;
+						/*if (wasFuncRet)
+							wasFuncRet = false;
+						else
+						{
+							e = ERROR_THROW(207, strCount - 1, 0);
+							Log::WriteError(log, e);
+							wasError = true;
+						}*/
+					}
+					if (token == LEX_IF)
+					{
+						inIf = true;
+						wasElse = false;
+						ifRet = false;
+						elseRet = false;
+						wasIf = true;
+						wasElse = false;
+					}
+					if (token == LEX_ELSE)
+					{
+						inElse = true;
+						wasElse = true;
+					}
 				}
 				// Ќе выводим лексему, если предыдущий символ был сепаратором(два последовательно идущих сепаратора)
 				if (!wasSeparator)
@@ -399,6 +447,13 @@ namespace Lex
 				// ќпределение сепараторов, которые должны выводитьс€ в таблицу лексем
 				if (IsLexSeparator(symbol))
 				{
+					if (symbol == END_OF_SUBAREA)
+					{
+						if (inIf)
+							inIf = false;
+						if (inElse)
+							inElse = false;
+					}
 					strcpy_s(operation, empty);
 					tempEntry = LT::FillEntry(symbol, strCount, TI_NULLIDX, operation);
 					LT::Add(lextable, tempEntry);
@@ -434,6 +489,8 @@ namespace Lex
 			lexeme[lexemeSize] = symbol;
 			lexemeSize++;
 		}
+		if (!hasMain)
+			throw ERROR_THROW(206);
 		return wasError;
 	}
 

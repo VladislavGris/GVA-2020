@@ -80,7 +80,7 @@ namespace Gen
 					*(stream) << "byte " << "'" << idtable.table[i].value.vstr.str << "'";
 					if (idtable.table[i].isArray)
 					{
-						(*stream) << ", 0" << std::endl;
+						(*stream) << ", 0";
 					}
 					(*stream) << std::endl;
 				}

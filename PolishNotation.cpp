@@ -14,7 +14,8 @@ namespace PN
 			memset(buf, '\0', 3);
 			state = MFST::Get_Container(mfst.storestate, i);
 			// Получил позиции функций в таблице лексем
-			if ((mfst.deducation.nrules[i] == 1 && (mfst.deducation.nrulechains[i] == 20 || mfst.deducation.nrulechains[i] == 19 || mfst.deducation.nrulechains[i] == 13 || mfst.deducation.nrulechains[i] == 12)) ||
+			if ((mfst.deducation.nrules[i] == 1 && 
+				(mfst.deducation.nrulechains[i] == 20 || mfst.deducation.nrulechains[i] == 19 || mfst.deducation.nrulechains[i] == 13 || mfst.deducation.nrulechains[i] == 12)) || 
 				(mfst.deducation.nrules[i] == 2 && mfst.deducation.nrulechains[i] == 2))
 			{
 				LT::LexTable tempTable = LT::Create(12);
@@ -33,12 +34,6 @@ namespace PN
 						if (parm)
 							parmCount++;
 						break;
-					/*case LEX_COMMA:
-						if (parmCount == 0)
-							parmCount += 2;
-						else
-							parmCount++;
-						break;*/
 					case LEX_LEFTHESIS:
 						break;
 					case LEX_RIGHTHESIS:

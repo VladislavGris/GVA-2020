@@ -22,6 +22,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		Log::WriteInfo(log, "---- Лексический анализ ----\nНачало работы лексического анализатора");
 		if (!Lex::ParseAChain(in, lex.lextable, lex.idtable, log))
 			Log::WriteInfo(log, "Лексический анализ выполнен успешно");
+		else
+			throw ERROR_THROW(208);
 #ifdef PRINT_TABLES
 		LT::PrintLexTable(lex.lextable);
 		IT::PrintIDTable(lex.idtable);
@@ -55,8 +57,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	catch (Error::ERROR e)
 	{
 		Log::WriteError(log, e);
-		if(e.id >= 200 && e.id < 300)
-			Log::WriteInfo(log, "Работа лексического анализатора прервана");
+		Log::WriteInfo(log, "Работа транслятора завершена с ошибками");
 	}
 	system("pause");
 	return 0;
