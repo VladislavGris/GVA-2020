@@ -14,8 +14,8 @@ namespace Gen
 		(*stream) << ".model flat, stdcall" << std::endl;
 		(*stream) << "includelib kernel32.lib" << std::endl;
 		(*stream) << "includelib libucrt.lib" << std::endl;
-		(*stream) << "includelib Debug/GVALib.lib" << std::endl;
-		(*stream) << "includelib Debug/GVAAsmLib.lib" << std::endl;
+		(*stream) << "includelib GVALib.lib" << std::endl;
+		(*stream) << "includelib GVAAsmLib.lib" << std::endl;
 		(*stream) << "ExitProcess proto : dword" << std::endl;
 		(*stream) << "SetConsoleTitleA proto:dword" << std::endl;
 		(*stream) << "GetStdHandle proto:dword" << std::endl;

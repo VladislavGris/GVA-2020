@@ -11,8 +11,8 @@ namespace Lex
 												LEX_GREATER, LEX_EQUAL, LEX_NOT_EQUAL, LEX_ID, LEX_LITERAL,LEX_LITERAL, LEX_LITERAL, LEX_LITERAL/*, LEX_LITERAL*/};
 		bool wasSeparator = false, isLiteral = false, wasChanged = false, areParametrs = false, wasError = false, isCommentary = false, arrayLiteral = false, hasMain = false, wasFuncRet = true,
 			inIf = false, inElse = false, ifRet = false, elseRet = false, wasIf = false, wasElse = false;
-		IT::IDDATATYPE datatype;
-		IT::IDTYPE type;
+		IT::IDDATATYPE datatype = IT::IDDATATYPE::NUM;
+		IT::IDTYPE type = IT::IDTYPE::V;
 		LT::Entry tempEntry;
 		IT::Entry ITTempEntry;
 		Error::ERROR e;

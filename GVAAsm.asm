@@ -2,8 +2,8 @@
 .model flat, stdcall
 includelib kernel32.lib
 includelib libucrt.lib
-includelib Debug/GVALib.lib
-includelib Debug/GVAAsmLib.lib
+includelib GVALib.lib
+includelib GVAAsmLib.lib
 ExitProcess proto : dword
 SetConsoleTitleA proto:dword
 GetStdHandle proto:dword
@@ -390,39 +390,6 @@ mov g4, al
 push offset ConsoleTitle
 lea eax, g4
 push eax
-call printconsole
-mov eax, 10
-mov result, al
-push offset ConsoleTitle
-push offset result
-call printconsole
-
-push a4
-push offset result
-call int_to_char
-push offset ConsoleTitle
-push offset result
-call printconsole
-push offset result
-call cleararray
-mov eax, 10
-mov result, al
-push offset ConsoleTitle
-push offset result
-call printconsole
-
-push offset ConsoleTitle
-lea eax, e4
-push eax
-call printconsole
-mov eax, 10
-mov result, al
-push offset ConsoleTitle
-push offset result
-call printconsole
-
-push offset ConsoleTitle
-push stra4
 call printconsole
 mov eax, 10
 mov result, al

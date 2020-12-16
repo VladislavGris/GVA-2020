@@ -17,18 +17,4 @@ extern "C"
 		else
 			return 0;					// str1 = str2
 	}
-	int __stdcall cpr(char* str)
-	{
-		puts(str);
-		return 0;
-	}
-	int __stdcall ipr(int a)
-	{
-		printf("%d\n", a);
-		return 0;
-	}
-	void hello()
-	{
-		puts("Hello\n");
-	}
 }
