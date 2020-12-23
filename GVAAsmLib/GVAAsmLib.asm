@@ -1,7 +1,10 @@
 .586
 .model flat, stdcall
+includelib kernel32.lib
 includelib libucrt.lib
-
+includelib GVALib.lib
+includelib GVAAsmLib.lib
+ExitProcess proto : dword
 SetConsoleTitleA proto:dword
 GetStdHandle proto:dword
 WriteConsoleA proto:dword,: dword,: dword,: dword,: dword

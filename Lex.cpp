@@ -335,9 +335,12 @@ namespace Lex
 						{
 							if (!ifRet || !elseRet)
 							{
-								e = ERROR_THROW_IN(207, strCount - 1, 0);
-								Log::WriteError(log, e);
-								wasError = true;
+								if (!wasFuncRet)
+								{
+									e = ERROR_THROW_IN(207, strCount - 1, 0);
+									Log::WriteError(log, e);
+									wasError = true;
+								}
 							}
 						}
 						else if (!wasFuncRet)
@@ -351,14 +354,6 @@ namespace Lex
 						ifRet = false;
 						elseRet = false;
 						wasFuncRet = false;
-						/*if (wasFuncRet)
-							wasFuncRet = false;
-						else
-						{
-							e = ERROR_THROW(207, strCount - 1, 0);
-							Log::WriteError(log, e);
-							wasError = true;
-						}*/
 					}
 					if (token == LEX_IF)
 					{
